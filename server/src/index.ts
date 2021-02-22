@@ -14,19 +14,9 @@ import connectRedis from 'connect-redis'
 import Redis from 'ioredis'
 import session from 'express-session'
 import { COOKIE_NAME, __prod__ } from './constants'
+import { firebaseConfig } from './firebaseConfig'
 
 const main = async () => {
-  const firebaseConfig = {
-    apiKey: 'AIzaSyD6v3VIEFQPH6t4aLyoYgMP-YAJ97atVI8',
-    authDomain: 'keebx-1ad07.firebaseapp.com',
-    databaseURL: 'https://keebx-1ad07-default-rtdb.firebaseio.com',
-    projectId: 'keebx-1ad07',
-    storageBucket: 'keebx-1ad07.appspot.com',
-    messagingSenderId: '79361282091',
-    appId: '1:79361282091:web:82f24a5662eaca62c41a6e',
-    measurementId: 'G-LYP9TV6X0L',
-  }
-
   admin.initializeApp(firebaseConfig)
 
   const app = express()
