@@ -21,7 +21,7 @@ import { UsernamePasswordInput } from './UsernamePasswordInput'
 import { sendEmail } from '../Utils/sendEmail'
 
 const db = admin.firestore()
-const docRef = db.collection('users').doc('User')
+const userRef = db.collection('users').doc('User')
 
 @ObjectType()
 class FieldError {
@@ -79,7 +79,14 @@ export class UserResolver {
     }
 
     const userIdInt = parseInt(userId)
-    const user = await User.findOne(userIdInt)
+    let user: any
+    const snapshot = await db.collection('users').get()
+    snapshot.forEach((doc) => {
+      if (parseInt(doc.id) === userIdInt) {
+        user = doc.data()
+      }
+    })
+
     if (!user) {
       return {
         errors: [
@@ -183,7 +190,7 @@ export class UserResolver {
     //   console.log('message: ', err.message)
     // }
     try {
-      await docRef.set({
+      await userRef.set({
         email: options.email,
         password: hashedPassword,
         username: options.username,
