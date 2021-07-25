@@ -27,12 +27,13 @@
 - product model (only keebs in this case)
 - the fucking ui app too (marketplace shit)
 
-### priority list
+### priority list aka roadmap
 - realtime database
 - server
+- connect db
 - user mode
 - user reg
 - keeb model
 - live bid/ask thing
 - make a design for the app
--  make the fucking app with next
+- make the fucking app with next
