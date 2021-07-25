@@ -18,7 +18,7 @@
 - graphql
 
 ### Stack Comparison
-![[Pasted image 20210725183955.png]]
+![Pasted image 20210725183955.png](https://github.com/AliAlAbbassi/keebx/blob/plan/plan/Pasted%20image%2020210725183955.png)
 
 ### features
 - realtime database
