@@ -1,27 +1,25 @@
-import argon2 from 'argon2'
-import admin from 'firebase-admin'
 import {
-  Arg,
-  Ctx,
-  Field,
-  FieldResolver,
+  Resolver,
   Mutation,
+  Arg,
+  Field,
+  Ctx,
   ObjectType,
   Query,
-  Resolver,
+  FieldResolver,
   Root,
 } from 'type-graphql'
-import { v4 } from 'uuid'
-import { FORGET_PASSWORD_PREFIX } from '../constants'
-import { User } from '../entities/User'
 import { MyContext } from '../types'
-// import { sendEmail } from '../Utils/sendEmail'
-import { validateRegister } from '../Utils/validateRegister'
+import { User } from '../entities/User'
+import argon2 from 'argon2'
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants'
 import { UsernamePasswordInput } from './UsernamePasswordInput'
-import { sendEmail } from '../Utils/sendEmail'
-
-const db = admin.firestore()
-const userRef = db.collection('users').doc('User')
+import { validateRegister } from '../utils/validateRegister'
+import { validateUserDetails } from '../utils/ValidateUserDetails'
+import { v4 } from 'uuid'
+import { getConnection } from 'typeorm'
+import { UserDetailsInput } from './UserDetailsInput'
+import { sendEmail } from '../utils/sendEmail'
 
 @ObjectType()
 class FieldError {
@@ -35,6 +33,7 @@ class FieldError {
 class UserResponse {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[]
+
   @Field(() => User, { nullable: true })
   user?: User
 }
@@ -43,19 +42,21 @@ class UserResponse {
 export class UserResolver {
   @FieldResolver(() => String)
   email(@Root() user: User, @Ctx() { req }: MyContext) {
-    if (req.session!.userId === user.id) {
+    // this is the current user and its ok to show them their own email
+    if (req.session.userId === user.id) {
       return user.email
     }
+    // current user wants to see someone elses email
     return ''
   }
 
   @Mutation(() => UserResponse)
   async changePassword(
     @Arg('token') token: string,
-    @Arg('newPassword') newPasssword: string,
+    @Arg('newPassword') newPassword: string,
     @Ctx() { redis, req }: MyContext
   ): Promise<UserResponse> {
-    if (newPasssword.length <= 2) {
+    if (newPassword.length <= 2) {
       return {
         errors: [
           {
@@ -66,7 +67,8 @@ export class UserResolver {
       }
     }
 
-    const userId = await redis.get(FORGET_PASSWORD_PREFIX + token)
+    const key = FORGET_PASSWORD_PREFIX + token
+    const userId = await redis.get(key)
     if (!userId) {
       return {
         errors: [
@@ -78,14 +80,8 @@ export class UserResolver {
       }
     }
 
-    const userIdInt = parseInt(userId)
-    let user: any
-    const snapshot = await db.collection('users').get()
-    snapshot.forEach((doc) => {
-      if (parseInt(doc.id) === userIdInt) {
-        user = doc.data()
-      }
-    })
+    const userIdNum = parseInt(userId)
+    const user = await User.findOne(userIdNum)
 
     if (!user) {
       return {
@@ -99,14 +95,17 @@ export class UserResolver {
     }
 
     await User.update(
-      { id: userIdInt },
-      { password: await argon2.hash(newPasssword) }
+      { id: userIdNum },
+      {
+        password: await argon2.hash(newPassword),
+      }
     )
 
-    await redis.del(FORGET_PASSWORD_PREFIX + token)
+    await redis.del(key)
 
-    // log in user after changing password
-    req.session!.userId = user.id
+    // log in user after change password
+    req.session.userId = user.id
+
     return { user }
   }
 
@@ -117,38 +116,35 @@ export class UserResolver {
   ) {
     const user = await User.findOne({ where: { email } })
     if (!user) {
+      // the email is not in the db
       return true
     }
+
     const token = v4()
+
     await redis.set(
       FORGET_PASSWORD_PREFIX + token,
       user.id,
       'ex',
       1000 * 60 * 60 * 24 * 3
-    )
+    ) // 3 days
 
     await sendEmail(
       email,
       `<a href="http://localhost:3000/change-password/${token}">reset password</a>`
     )
+
     return true
   }
 
   @Query(() => User, { nullable: true })
-  async me(@Ctx() { req }: MyContext) {
-    // u ain't logged in bro
-    if (!req.session!.userId) {
+  me(@Ctx() { req }: MyContext) {
+    // you are not logged in
+    if (!req.session.userId) {
       return null
     }
 
-    let me: any
-    const snapshot = await db.collection('users').get()
-    snapshot.forEach((doc) => {
-      if (parseInt(doc.id) === req.session!.userId) {
-        me = doc.data()
-      }
-    })
-    return { me }
+    return User.findOne(req.session.userId)
   }
 
   @Mutation(() => UserResponse)
@@ -160,60 +156,42 @@ export class UserResolver {
     if (errors) {
       return { errors }
     }
+
     const hashedPassword = await argon2.hash(options.password)
     let user
-    // try {
-    //   const result = await getConnection()
-    //     .createQueryBuilder()
-    //     .insert()
-    //     .into(User)
-    //     .values({
-    //       username: options.username,
-    //       email: options.email,
-    //       password: hashedPassword,
-    //     })
-    //     .returning('*')
-    //     .execute()
-    //   user = result.raw[0]
-    // } catch (err) {
-    //   // dupe username error
-    //   if (err.detail.includes('already exists')) {
-    //     return {
-    //       errors: [
-    //         {
-    //           field: 'username',
-    //           message: 'username already taken',
-    //         },
-    //       ],
-    //     }
-    //   }
-    //   console.log('message: ', err.message)
-    // }
     try {
-      await userRef.set({
-        email: options.email,
-        password: hashedPassword,
-        username: options.username,
-      })
+      // User.create({}).save()
+      const result = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values({
+          username: options.username,
+          email: options.email,
+          password: hashedPassword,
+        })
+        .returning('*')
+        .execute()
+      user = result.raw[0]
     } catch (err) {
-      console.log('message', err.message)
-      return {
-        errors: [
-          {
-            field: 'username',
-            message: 'username already taken',
-          },
-        ],
+      //|| err.detail.includes("already exists")) {
+      // duplicate username error
+      if (err.code === '23505') {
+        return {
+          errors: [
+            {
+              field: 'username',
+              message: 'username already taken',
+            },
+          ],
+        }
       }
     }
 
-    const snapshot = await db.collection('users').get()
-    snapshot.forEach((doc) => {
-      if (doc.data().email == options.email) {
-        req.session!.userId = parseInt(doc.id)
-        user = doc.data()
-      }
-    })
+    // store user id session
+    // this will set a cookie on the user
+    // keep them logged in
+    req.session.userId = user.id
 
     return { user }
   }
@@ -224,20 +202,11 @@ export class UserResolver {
     @Arg('password') password: string,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
-    let user: any
-    const snapshot = await db.collection('users').get()
-    snapshot.forEach((doc) => {
-      if (usernameOrEmail.includes('@')) {
-        if (doc.data().email == usernameOrEmail) {
-          user = doc.data()
-        }
-      } else {
-        if (doc.data().username == usernameOrEmail) {
-          user = doc.data()
-        }
-      }
-    })
-
+    const user = await User.findOne(
+      usernameOrEmail.includes('@')
+        ? { where: { email: usernameOrEmail } }
+        : { where: { username: usernameOrEmail } }
+    )
     if (!user) {
       return {
         errors: [
@@ -260,22 +229,69 @@ export class UserResolver {
       }
     }
 
-    req.session!.userId = user.id
-    return { user }
+    req.session.userId = user.id
+
+    return {
+      user,
+    }
   }
 
   @Mutation(() => Boolean)
   logout(@Ctx() { req, res }: MyContext) {
-    res.clearCookie('qid')
     return new Promise((resolve) =>
-      req.session!.destroy((err) => {
+      req.session.destroy((err) => {
+        res.clearCookie(COOKIE_NAME)
         if (err) {
           console.log(err)
           resolve(false)
           return
         }
+
         resolve(true)
       })
     )
+  }
+
+  @Mutation(() => UserResponse)
+  async updateUserDetails(
+    @Arg('options') options: UserDetailsInput,
+    @Ctx() { req }: MyContext
+  ): Promise<UserResponse> {
+    const errors = validateUserDetails(options)
+    if (errors) {
+      return { errors }
+    }
+
+    let user
+    try {
+      // User.create({}).save()
+      const result = await getConnection()
+        .createQueryBuilder()
+        .update(User)
+        .set({ ...options })
+        .returning('*')
+        .execute()
+      user = result.raw[0]
+    } catch (err) {
+      //|| err.detail.includes("already exists")) {
+      // duplicate username error
+      if (err.code === '23505') {
+        return {
+          errors: [
+            {
+              field: 'username',
+              message: 'username already taken',
+            },
+          ],
+        }
+      }
+    }
+
+    // store user id session
+    // this will set a cookie on the user
+    // keep them logged in
+    req.session.userId = user.id
+
+    return { user }
   }
 }

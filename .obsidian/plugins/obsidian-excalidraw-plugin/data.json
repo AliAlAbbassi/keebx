@@ -1,0 +1,23 @@
+{
+  "folder": "Excalidraw",
+  "templateFilePath": "Excalidraw/Template.excalidraw",
+  "drawingFilenamePrefix": "Drawing ",
+  "drawingFilenameDateTime": "YYYY-MM-DD HH.mm.ss",
+  "width": "400",
+  "linkPrefix": "🔸",
+  "showLinkBrackets": true,
+  "allowCtrlClick": true,
+  "exportWithTheme": true,
+  "exportWithBackground": true,
+  "keepInSync": false,
+  "autoexportSVG": false,
+  "autoexportPNG": false,
+  "autoexportExcalidraw": false,
+  "syncExcalidraw": false,
+  "experimentalFileType": false,
+  "experimentalFileTag": "✏️",
+  "compatibilityMode": false,
+  "loadCount": 1,
+  "drawingOpenCount": 0,
+  "library": "{\"type\":\"excalidrawlib\",\"version\":1,\"library\":[]}"
+}

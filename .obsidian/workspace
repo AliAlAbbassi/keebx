@@ -1,0 +1,96 @@
+{
+  "main": {
+    "id": "f7c367fda8965ef4",
+    "type": "split",
+    "children": [
+      {
+        "id": "15b1f611e55f82d0",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "plan/plan.md",
+            "mode": "preview"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "30bce5b0c15bddb0",
+    "type": "split",
+    "children": [
+      {
+        "id": "e6a4d416326c09b4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6273f33498a431f0",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "26a205777586adf1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b1060fafbdc6f1c4",
+    "type": "split",
+    "children": [
+      {
+        "id": "80d0a8813fbe38a8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "06cb6c4f089680ee",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "plan/plan.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "15b1f611e55f82d0",
+  "lastOpenFiles": [
+    "plan/plan.md",
+    "plan/Pasted image 20210725183955.png",
+    "plan.md",
+    "Excalidraw/Drawing 2021-07-25 18.37.14.excalidraw.md"
+  ]
+}

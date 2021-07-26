@@ -1,21 +1,27 @@
-import { Field, Int, ObjectType } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql'
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Product } from './Product'
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
-  @Field(() => Int)
+  @Field()
   @PrimaryGeneratedColumn()
   id!: number
+
+  @Field(() => String, { nullable: true })
+  @Column({ type: 'text', nullable: true })
+  profilePhotoUrl: string | null
+
+  @Field(() => String, { nullable: true })
+  @Column({ type: 'text', nullable: true })
+  bio: string | null
 
   @Field()
   @Column({ unique: true })
@@ -27,9 +33,6 @@ export class User extends BaseEntity {
 
   @Column()
   password!: string
-
-  @OneToMany(() => Product, (product) => product.creator)
-  products: Product[]
 
   @Field(() => String)
   @CreateDateColumn()
