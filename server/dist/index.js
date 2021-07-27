@@ -28,13 +28,14 @@ const User_1 = require("./entities/User");
 const path_1 = __importDefault(require("path"));
 const createUserLoader_1 = require("./utils/createUserLoader");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield typeorm_1.createConnection({
+    const conn = yield typeorm_1.createConnection({
         type: 'postgres',
         url: process.env.DATABASE_URL,
         logging: true,
         migrations: [path_1.default.join(__dirname, './migrations/*')],
         entities: [User_1.User],
     });
+    conn.runMigrations();
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default(process.env.REDIS_URL);
