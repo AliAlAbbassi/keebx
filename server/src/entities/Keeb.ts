@@ -40,21 +40,17 @@ export class User extends BaseEntity {
   @Column({ type: 'array' })
   switches: string[]
 
-  @Field(() => Number)
-  @Column({ type: 'number' })
-  lowestAsk: number
+  @Field(() => [Number])
+  @Column({ type: 'array' })
+  bids: number[]
 
-  @Field(() => Number)
-  @Column({ type: 'number' })
-  highestBid: number
+  @Field(() => [Number])
+  @Column({ type: 'array' })
+  asks: number[]
 
-  @Field(() => Number)
-  @Column({ type: 'number' })
-  lastSale: number
-
-  @Field()
-  @Column()
-  salesId: string
+  @Field(() => [Number])
+  @Column({ type: 'array', array: true })
+  sales: number[]
 
   @Field(() => String)
   @CreateDateColumn()
