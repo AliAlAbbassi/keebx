@@ -42,19 +42,19 @@ export class User extends BaseEntity {
 
   @Field(() => Number)
   @Column({ type: 'number' })
-  lowestAsk: number
+  askPrice: number
 
   @Field(() => Number)
   @Column({ type: 'number' })
-  highestBid: number
+  bidPrice: number
 
   @Field(() => Number)
   @Column({ type: 'number' })
   lastSale: number
 
-  @Field(() => [Number])
-  @Column({ type: 'array' })
-  allSales: number[]
+  @Field()
+  @Column()
+  salesId: string 
 
   @Field(() => String)
   @CreateDateColumn()
