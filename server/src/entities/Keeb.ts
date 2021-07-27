@@ -15,7 +15,7 @@ enum condition {
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity {
+export class Keeb extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id!: number
@@ -33,23 +33,23 @@ export class User extends BaseEntity {
   condition: condition
 
   @Field(() => Number)
-  @Column({ type: 'number' })
-  authenticity: number
+  @Column({ type: 'decimal' })
+  authenticity: Number
 
   @Field(() => [String])
-  @Column({ type: 'array' })
+  @Column({ type: 'simple-array' })
   switches: string[]
 
   @Field(() => [Number])
-  @Column({ type: 'array' })
+  @Column({ type: 'decimal', array: true })
   bids: number[]
 
   @Field(() => [Number])
-  @Column({ type: 'array' })
+  @Column({ type: 'decimal', array: true })
   asks: number[]
 
   @Field(() => [Number])
-  @Column({ type: 'array', array: true })
+  @Column({ type: 'decimal', array: true })
   sales: number[]
 
   @Field(() => String)
