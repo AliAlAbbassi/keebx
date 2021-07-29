@@ -40,13 +40,13 @@ export class Keeb extends BaseEntity {
   @Column({ type: 'simple-array' })
   switches: string[]
 
-  @Field(() => [Number])
-  @Column({ type: 'decimal', array: true })
-  bids: number[]
+  @Field(() => [String])
+  @Column({ type: 'simple-array' })
+  bidIds: string[]
 
-  @Field(() => [Number])
-  @Column({ type: 'decimal', array: true })
-  asks: number[]
+  @Field(() => [String])
+  @Column({ type: 'simple-array' })
+  askIds: string[]
 
   @Field(() => [Number])
   @Column({ type: 'decimal', array: true })

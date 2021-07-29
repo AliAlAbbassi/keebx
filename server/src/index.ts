@@ -12,7 +12,7 @@ import cors from 'cors'
 import { createConnection } from 'typeorm'
 import { User } from './entities/User'
 import path from 'path'
-import { createUserLoader } from './utils/createUserLoader'
+import { createUserLoader } from './Utils/createUserLoader'
 import { Keeb } from './entities/Keeb'
 
 const main = async () => {
