@@ -14,6 +14,9 @@ import { User } from './entities/User'
 import path from 'path'
 import { createUserLoader } from './Utils/createUserLoader'
 import { Keeb } from './entities/Keeb'
+import { Ask } from './entities/Ask'
+import { Bid } from './entities/Bid'
+import { KeebResolver } from './resolvers/keeb'
 
 const main = async () => {
   await createConnection({
@@ -22,7 +25,7 @@ const main = async () => {
     logging: true,
     // synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
-    entities: [User, Keeb],
+    entities: [User, Keeb, Ask, Bid],
   })
 
   // conn.runMigrations()
@@ -60,7 +63,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, KeebResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

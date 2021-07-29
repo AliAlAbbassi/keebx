@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, ObjectType, registerEnumType } from 'type-graphql'
 import {
   BaseEntity,
   Column,
@@ -7,11 +7,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { condition } from '../types'
 
-enum condition {
-  'New',
-  'Used',
-}
+registerEnumType(condition, {
+  name: 'condition',
+  description: 'Enum for the condition of the keeb',
+})
 
 @ObjectType()
 @Entity()

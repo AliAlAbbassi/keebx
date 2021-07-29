@@ -14,12 +14,12 @@ import { User } from '../entities/User'
 import argon2 from 'argon2'
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants'
 import { UsernamePasswordInput } from './UsernamePasswordInput'
-import { validateRegister } from '../utils/validateRegister'
-import { validateUserDetails } from '../utils/ValidateUserDetails'
+import { validateRegister } from '../Utils/validateRegister'
+import { validateUserDetails } from '../Utils/ValidateUserDetails'
 import { v4 } from 'uuid'
 import { getConnection } from 'typeorm'
 import { UserDetailsInput } from './UserDetailsInput'
-import { sendEmail } from '../utils/sendEmail'
+import { sendEmail } from '../Utils/sendEmail'
 
 @ObjectType()
 class FieldError {
