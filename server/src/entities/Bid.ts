@@ -19,13 +19,13 @@ export class Bid extends BaseEntity {
   @Column({ type: 'decimal' })
   bidPrice!: number
 
-  @Field()
-  @Column()
-  userId!: string
+  @Field(() => Number)
+  @Column({ type: 'decimal' })
+  userId!: number
 
-  @Field()
-  @Column()
-  keebId!: string
+  @Field(() => Number)
+  @Column({ type: 'decimal' })
+  keebId!: Number
 
   @Field(() => String)
   @Column({ unique: true, type: 'text' })

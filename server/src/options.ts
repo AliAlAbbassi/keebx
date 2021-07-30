@@ -59,10 +59,10 @@ export class bidInput {
   @Field(() => Number)
   bidPrice!: number
 
-  @Field()
-  userId!: string
+  @Field(() => Number)
+  userId!: number
 
-  @Field()
+  @Field(() => Number)
   keebId!: number
 
   @Field(() => String)
