@@ -105,4 +105,29 @@ export class KeebResolver {
     }
     return { keeb }
   }
+
+  @Mutation(() => KeebResponse)
+  async deleteKeeb(@Arg('id') id: number): Promise<KeebResponse> {
+    let keeb
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .delete()
+        .from(Keeb)
+        .where('id = :id', { id })
+        .execute()
+
+      keeb = result.raw[0]
+    } catch (error) {
+      return {
+        errors: [
+          {
+            field: 'keeb',
+            message: 'bad error',
+          },
+        ],
+      }
+    }
+    return { keeb }
+  }
 }
