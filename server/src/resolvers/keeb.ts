@@ -2,7 +2,7 @@ import { validateKeebOptions } from '../Utils/validateKeebOptions'
 import { Arg, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql'
 import { getConnection } from 'typeorm'
 import { Keeb } from '../entities/Keeb'
-import { KeebOptions } from '../options'
+import { KeebOptions, updateKeebOptions } from '../options'
 
 @ObjectType()
 class KeebFieldError {
@@ -49,8 +49,6 @@ export class KeebResolver {
       .offset(offset)
       .getMany()
 
-    console.log('keebs', keebs)
-
     return keebs
   }
 
@@ -67,6 +65,34 @@ export class KeebResolver {
 
     try {
       Keeb.create(options).save()
+    } catch (error) {
+      return {
+        errors: [
+          {
+            field: 'keeb',
+            message: 'bad error',
+          },
+        ],
+      }
+    }
+    return { keeb }
+  }
+
+  @Mutation(() => KeebResponse)
+  async updateKeeb(
+    @Arg('updateOptions') updateOptions: updateKeebOptions,
+    @Arg('id') id: number
+  ): Promise<KeebResponse> {
+    let keeb
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .update(Keeb)
+        .set(updateOptions)
+        .where('id = :id', { id })
+        .execute()
+
+      keeb = result.raw[0]
     } catch (error) {
       return {
         errors: [
