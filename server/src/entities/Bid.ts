@@ -28,11 +28,11 @@ export class Bid extends BaseEntity {
   keebId!: Number
 
   @Field(() => String)
-  @Column({ unique: true, type: 'text' })
+  @Column({ type: 'text' })
   title!: string
 
   @Field(() => String)
-  @Column({ unique: true, type: 'text' })
+  @Column({ type: 'text' })
   ticker!: string
 
   @Field(() => String)

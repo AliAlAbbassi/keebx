@@ -17,6 +17,7 @@ import { Keeb } from './entities/Keeb'
 import { Ask } from './entities/Ask'
 import { Bid } from './entities/Bid'
 import { KeebResolver } from './resolvers/keeb'
+import { bidResolver } from './resolvers/bid'
 
 const main = async () => {
   await createConnection({
@@ -63,7 +64,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, KeebResolver],
+      resolvers: [UserResolver, KeebResolver, bidResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

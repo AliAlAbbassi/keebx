@@ -27,7 +27,7 @@ class KeebResponse {
 @Resolver(Keeb)
 export class KeebResolver {
   @Query(() => Keeb, { nullable: true })
-  keeb(@Arg('keebId') keebId: string) {
+  keeb(@Arg('keebId') keebId: number) {
     return Keeb.findOne(keebId)
   }
 

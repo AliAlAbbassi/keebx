@@ -230,6 +230,7 @@ export class UserResolver {
     }
 
     req.session.userId = user.id
+    console.log('req user id', req.session.userId)
 
     return {
       user,

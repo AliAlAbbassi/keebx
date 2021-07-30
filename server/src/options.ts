@@ -11,9 +11,6 @@ export class FieldError {
 
 @InputType()
 export class KeebOptions {
-  @Field()
-  id!: number
-
   @Field(() => String)
   title!: string
 
@@ -53,9 +50,6 @@ export class updateKeebOptions {
 
 @InputType()
 export class bidInput {
-  @Field()
-  bidId!: number
-
   @Field(() => Number)
   bidPrice!: number
 

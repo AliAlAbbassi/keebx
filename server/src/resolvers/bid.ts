@@ -1,6 +1,7 @@
-import { Bid } from 'src/entities/Bid'
-import { bidInput } from 'src/options'
-import { ObjectType, Field, Resolver, Mutation, Arg } from 'type-graphql'
+import { Arg, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql'
+import { getConnection } from 'typeorm'
+import { Bid } from '../entities/Bid'
+import { bidInput } from '../options'
 
 @ObjectType()
 class bidFieldError {
@@ -22,11 +23,22 @@ class bidResponse {
 @Resolver(Bid)
 export class bidResolver {
   @Mutation(() => bidResponse)
-  async createBid(@Arg('options') options: bidInput): Promise<bidResponse> {
+  async createBid(
+    @Arg('options') options: bidInput
+    // @Ctx() { req }: MyContext
+  ): Promise<bidResponse> {
     let bid
 
     try {
-      Bid.create(options).save()
+      // bid = await Bid.create(options).save()
+      const result = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(Bid)
+        .values([options])
+        .execute()
+      bid = result.raw[0]
+      console.log(bid)
     } catch (error) {
       return {
         errors: [
@@ -37,6 +49,18 @@ export class bidResolver {
         ],
       }
     }
+
     return { bid }
+  }
+
+  @Query(() => [Bid], { nullable: true })
+  async bids(@Arg('keebId') keebId: number) {
+    const bids = await getConnection()
+      .getRepository(Bid)
+      .createQueryBuilder('bid')
+      .where('bid.keebId = :keebId', { keebId })
+      .getMany()
+
+    return bids
   }
 }
