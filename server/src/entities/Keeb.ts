@@ -45,18 +45,6 @@ export class Keeb extends BaseEntity {
   @Column({ type: 'simple-array' })
   switches: string[]
 
-  @Field(() => [String])
-  @Column({ type: 'simple-array' })
-  bidIds: string[]
-
-  @Field(() => [String])
-  @Column({ type: 'simple-array' })
-  askIds: string[]
-
-  @Field(() => [Number])
-  @Column({ type: 'decimal', array: true })
-  sales: number[]
-
   @Field(() => String)
   @CreateDateColumn()
   createdAt: Date

@@ -12,10 +12,16 @@ export class FieldError {
 @InputType()
 export class KeebOptions {
   @Field()
-  title: string
+  id!: number
 
-  @Field()
-  ticker: string
+  @Field(() => String)
+  title!: string
+
+  @Field(() => String)
+  imageUrl!: string
+
+  @Field(() => String)
+  ticker!: string
 
   @Field(() => condition)
   condition: condition
@@ -25,15 +31,6 @@ export class KeebOptions {
 
   @Field(() => [String])
   switches: string[]
-
-  @Field(() => [String], { nullable: true })
-  bidIds?: string[]
-
-  @Field(() => [String], { nullable: true })
-  askIds?: string[]
-
-  @Field(() => [Number], { nullable: true })
-  sales?: number[]
 }
 
 @InputType()
@@ -52,13 +49,25 @@ export class updateKeebOptions {
 
   @Field(() => [String], { nullable: true })
   switches?: string[]
+}
 
-  @Field(() => [String], { nullable: true })
-  bidIds?: string[]
+@InputType()
+export class bidInput {
+  @Field()
+  bidId!: number
 
-  @Field(() => [String], { nullable: true })
-  askIds?: string[]
+  @Field(() => Number)
+  bidPrice!: number
 
-  @Field(() => [Number], { nullable: true })
-  sales?: number[]
+  @Field()
+  userId!: string
+
+  @Field()
+  keebId!: number
+
+  @Field(() => String)
+  title!: string
+
+  @Field(() => String)
+  ticker!: string
 }

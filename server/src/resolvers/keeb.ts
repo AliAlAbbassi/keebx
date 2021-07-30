@@ -1,8 +1,8 @@
-import { validateKeebOptions } from '../Utils/validateKeebOptions'
 import { Arg, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql'
 import { getConnection } from 'typeorm'
 import { Keeb } from '../entities/Keeb'
 import { KeebOptions, updateKeebOptions } from '../options'
+import { validateKeebOptions } from '../Utils/validateKeebOptions'
 
 @ObjectType()
 class KeebFieldError {
