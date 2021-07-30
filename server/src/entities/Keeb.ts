@@ -26,6 +26,10 @@ export class Keeb extends BaseEntity {
   title!: string
 
   @Field(() => String)
+  @Column({ type: 'text' })
+  imageUrl!: string
+
+  @Field(() => String)
   @Column({ unique: true, type: 'text' })
   ticker!: string
 
