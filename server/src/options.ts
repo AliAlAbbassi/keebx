@@ -83,3 +83,15 @@ export class askInput {
   @Field(() => String)
   ticker!: string
 }
+
+@InputType()
+export class saleInput {
+  @Field(() => Number)
+  salePrice!: number
+
+  @Field(() => Number)
+  bidId!: number
+
+  @Field(() => Number)
+  askId!: number
+}

@@ -80,7 +80,7 @@ export class bidResolver {
       return {
         errors: [
           {
-            field: 'keeb',
+            field: 'bid',
             message: 'bad error',
           },
         ],
