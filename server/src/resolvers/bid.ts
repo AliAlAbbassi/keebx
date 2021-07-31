@@ -63,4 +63,29 @@ export class bidResolver {
 
     return bids
   }
+
+  @Mutation(() => bidResponse)
+  async deleteBid(@Arg('bidId') bidId: number) {
+    let bid
+    try {
+      const result = await getConnection()
+        .createQueryBuilder()
+        .delete()
+        .from(Bid)
+        .where('bidId = :bidId', { bidId })
+        .execute()
+
+      bid = result.raw[0]
+    } catch (error) {
+      return {
+        errors: [
+          {
+            field: 'keeb',
+            message: 'bad error',
+          },
+        ],
+      }
+    }
+    return { bid }
+  }
 }
