@@ -19,13 +19,13 @@ export class Ask extends BaseEntity {
   @Column({ type: 'decimal' })
   askPrice!: number
 
-  @Field()
-  @Column()
-  userId!: string
+  @Field(() => Number)
+  @Column({ type: 'decimal' })
+  userId!: number
 
-  @Field()
-  @Column()
-  keebId!: string
+  @Field(() => Number)
+  @Column({ type: 'decimal' })
+  keebId!: number
 
   @Field(() => String)
   @Column({ unique: true, type: 'text' })

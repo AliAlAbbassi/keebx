@@ -65,3 +65,21 @@ export class bidInput {
   @Field(() => String)
   ticker!: string
 }
+
+@InputType()
+export class askInput {
+  @Field(() => Number)
+  askPrice!: number
+
+  @Field(() => Number)
+  userId!: number
+
+  @Field(() => Number)
+  keebId!: number
+
+  @Field(() => String)
+  title!: string
+
+  @Field(() => String)
+  ticker!: string
+}
