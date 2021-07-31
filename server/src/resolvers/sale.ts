@@ -23,7 +23,7 @@ class saleResponse {
 @Resolver(Sale)
 export class saleResolver {
   @Mutation(() => saleResponse)
-  async createsale(
+  async createSale(
     @Arg('options') options: saleInput
     // @Ctx() { req }: MyContext
   ): Promise<saleResponse> {
@@ -62,6 +62,17 @@ export class saleResolver {
       .getMany()
 
     return sales
+  }
+
+  @Query(() => Sale, { nullable: true })
+  async sale(@Arg('saleId') saleId: number) {
+    const sale = await getConnection()
+      .getRepository(Sale)
+      .createQueryBuilder('sale')
+      .where('sale.saleId = :saleId', { saleId })
+      .getOne()
+
+    return sale
   }
 
   @Mutation(() => saleResponse)
