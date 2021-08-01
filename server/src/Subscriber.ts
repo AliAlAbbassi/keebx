@@ -1,4 +1,6 @@
-import Redis from 'ioredis'
+// FAILED EXPERIMENT
+
+import { Redis } from 'ioredis'
 import { getConnection } from 'typeorm'
 import { Ask } from './entities/Ask'
 import { Bid } from './entities/Bid'
@@ -7,93 +9,104 @@ import { askResolver } from './resolvers/ask'
 import { bidResolver } from './resolvers/bid'
 import { saleResolver } from './resolvers/sale'
 
-const sub = new Redis(process.env.REDIS_URL2)
+export const subscribe = (sub: Redis) => {
+  sub.subscribe('sales-channel', (err, count) => {
+    if (err) {
+      console.error('Failed to subscribe: %s', err.message)
+    } else {
+      // `count` represents the number of channels this client are currently subscribed to.
+      console.log(
+        `Subscribed successfully! This client is currently subscribed to ${count} channels.`
+      )
+    }
+  })
 
-sub.subscribe('sales-channel', (err, count) => {
-  if (err) {
-    console.error('Failed to subscribe: %s', err.message)
-  } else {
-    // `count` represents the number of channels this client are currently subscribed to.
-    console.log(
-      `Subscribed successfully! This client is currently subscribed to ${count} channels.`
-    )
-  }
-})
+  sub.on('new bid', async (channel, message) => {
+    console.log(`Received ${message} from ${channel}`)
 
-sub.on('new bid', async (channel, message) => {
-  console.log(`Received ${message} from ${channel}`)
+    const bidReso = new bidResolver()
+    const askReso = new askResolver()
+    const keebId = await redis.get('keebId')
 
-  const bidReso = new bidResolver()
-  const askReso = new askResolver()
-  const keebId = await redis.get('keebId')
-  const bid = await getConnection()
-    .getRepository(Bid)
-    .createQueryBuilder('bid')
-    .where('bid.keebId = :keebId', { keebId })
-    .orderBy('bid.createdAt', 'DESC')
-    .limit(1)
-    .getOne()
+    console.log('keebId from redis', keebId)
 
-  const lowestAsk = await getConnection()
-    .getRepository(Ask)
-    .createQueryBuilder('ask')
-    .where('ask.keebId = :keebId', { keebId })
-    .orderBy('ask.askPrice', 'ASC')
-    .limit(1)
-    .getOne()
-  // const lowestAsk = getLowest(asks)
+    const bid = await getConnection()
+      .getRepository(Bid)
+      .createQueryBuilder('bid')
+      .where('bid.keebId = :keebId', { keebId })
+      .orderBy('bid.createdAt', 'DESC')
+      .limit(1)
+      .getOne()
 
-  if (bid?.bidPrice! > lowestAsk?.askPrice!) {
-    // make a sale
-    const saleReso = new saleResolver()
-    saleReso.createSale({
-      askId: lowestAsk?.askId!,
-      bidId: bid?.bidId!,
-      salePrice: bid?.bidPrice!,
-    })
+    console.log('bid from db', bid)
 
-    // delete bid/ask
-    bidReso.deleteBid(bid?.bidId!)
+    const lowestAsk = await getConnection()
+      .getRepository(Ask)
+      .createQueryBuilder('ask')
+      .where('ask.keebId = :keebId', { keebId })
+      .orderBy('ask.askPrice', 'ASC')
+      .limit(1)
+      .getOne()
+    // const lowestAsk = getLowest(asks)
 
-    askReso.deleteAsk(lowestAsk?.askId!)
-  }
-})
+    console.log('lowest ask from db', lowestAsk)
 
-sub.on('new ask', async (channel, message) => {
-  console.log(`Received ${message} from ${channel}`)
+    if (bid?.bidPrice! > lowestAsk?.askPrice!) {
+      // make a sale
+      const saleReso = new saleResolver()
+      const sale = await saleReso.createSale({
+        askId: lowestAsk?.askId!,
+        bidId: bid?.bidId!,
+        salePrice: bid?.bidPrice!,
+        keebId: bid?.keebId!,
+      })
 
-  const askReso = new askResolver()
-  const bidReso = new bidResolver()
-  const keebId = await redis.get('keebId')
-  const highestBid = await getConnection()
-    .getRepository(Bid)
-    .createQueryBuilder('bid')
-    .where('bid.keebId = :keebId', { keebId })
-    .orderBy('bid.bidPrice', 'ASC')
-    .limit(1)
-    .getOne()
+      console.log('new sale', sale)
 
-  const ask = await getConnection()
-    .getRepository(Ask)
-    .createQueryBuilder('ask')
-    .where('ask.keebId = :keebId', { keebId })
-    .orderBy('ask.createdAt', 'DESC')
-    .limit(1)
-    .getOne()
-  // const lowestAsk = getLowest(asks)
+      // delete bid/ask
+      bidReso.deleteBid(bid?.bidId!)
 
-  if (highestBid?.bidPrice! > ask?.askPrice!) {
-    // make a sale
-    const saleReso = new saleResolver()
-    saleReso.createSale({
-      askId: ask?.askId!,
-      bidId: highestBid?.bidId!,
-      salePrice: highestBid?.bidPrice!,
-    })
+      askReso.deleteAsk(lowestAsk?.askId!)
+    }
+  })
 
-    // delete bid/ask
-    bidReso.deleteBid(highestBid?.bidId!)
+  sub.on('new ask', async (channel, message) => {
+    console.log(`Received ${message} from ${channel}`)
 
-    askReso.deleteAsk(ask?.askId!)
-  }
-})
+    const askReso = new askResolver()
+    const bidReso = new bidResolver()
+    const keebId = await redis.get('keebId')
+    const highestBid = await getConnection()
+      .getRepository(Bid)
+      .createQueryBuilder('bid')
+      .where('bid.keebId = :keebId', { keebId })
+      .orderBy('bid.bidPrice', 'ASC')
+      .limit(1)
+      .getOne()
+
+    const ask = await getConnection()
+      .getRepository(Ask)
+      .createQueryBuilder('ask')
+      .where('ask.keebId = :keebId', { keebId })
+      .orderBy('ask.createdAt', 'DESC')
+      .limit(1)
+      .getOne()
+    // const lowestAsk = getLowest(asks)
+
+    if (highestBid?.bidPrice! > ask?.askPrice!) {
+      // make a sale
+      const saleReso = new saleResolver()
+      saleReso.createSale({
+        askId: ask?.askId!,
+        bidId: highestBid?.bidId!,
+        salePrice: highestBid?.bidPrice!,
+        keebId: highestBid?.keebId!,
+      })
+
+      // delete bid/ask
+      bidReso.deleteBid(highestBid?.bidId!)
+
+      askReso.deleteAsk(ask?.askId!)
+    }
+  })
+}

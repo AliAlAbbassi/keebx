@@ -11,6 +11,9 @@ import {
 } from 'type-graphql'
 import { getConnection } from 'typeorm'
 import { MyContext } from '../types'
+import { Bid } from '../entities/Bid'
+import { saleResolver } from './sale'
+import { bidResolver } from './bid'
 
 @ObjectType()
 class askFieldError {
@@ -36,7 +39,7 @@ export class askResolver {
     @Arg('options') options: askInput,
     @Ctx() { redis }: MyContext
   ): Promise<askResponse> {
-    let ask
+    let askId
 
     try {
       // bid = await Bid.create(options).save()
@@ -46,7 +49,7 @@ export class askResolver {
         .into(Ask)
         .values([options])
         .execute()
-      ask = result.raw[0]
+      askId = result.raw[0].askId
     } catch (error) {
       return {
         errors: [
@@ -58,15 +61,46 @@ export class askResolver {
       }
     }
 
-    redis.publish('sales-channel', 'new ask')
-    redis.set('keebId', options.keebId)
-    redis.set('userId', options.userId)
-    redis.set('bidId', ask.askId)
-    console.log(`Notified sales-channel of new ask`)
+    const highestBid = await getConnection()
+      .getRepository(Bid)
+      .createQueryBuilder('bid')
+      .where('bid.keebId = :keebId', { keebId: options.keebId })
+      .orderBy('bid.bidPrice', 'ASC')
+      .limit(1)
+      .getOne()
 
+    const ask = await this.ask(askId)
+
+    if (ask && highestBid)
+      if (highestBid.bidPrice! > ask.askPrice!) {
+        // make a sale
+        const saleReso = new saleResolver()
+        saleReso.createSale({
+          askId: ask?.askId!,
+          bidId: highestBid?.bidId!,
+          salePrice: highestBid?.bidPrice!,
+          keebId: highestBid?.keebId!,
+        })
+
+        // delete bid/ask
+        const bidReso = new bidResolver()
+        await bidReso.deleteBid(highestBid?.bidId!)
+
+        await this.deleteAsk(ask?.askId!)
+      }
     return { ask }
   }
 
+  @Query(() => Ask, { nullable: true })
+  async ask(@Arg('askId') askId: number) {
+    const ask = await getConnection()
+      .getRepository(Ask)
+      .createQueryBuilder('ask')
+      .where('ask.askId = :askId', { askId })
+      .getOne()
+
+    return ask
+  }
   @Query(() => [Ask], { nullable: true })
   async asks(@Arg('keebId') keebId: number) {
     const asks = await getConnection()

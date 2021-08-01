@@ -94,4 +94,7 @@ export class saleInput {
 
   @Field(() => Number)
   askId!: number
+
+  @Field(() => Number)
+  keebId!: number
 }

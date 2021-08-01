@@ -25,7 +25,7 @@ export class Bid extends BaseEntity {
 
   @Field(() => Number)
   @Column({ type: 'decimal' })
-  keebId!: Number
+  keebId!: number
 
   @Field(() => String)
   @Column({ type: 'text' })
