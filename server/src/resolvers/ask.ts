@@ -1,19 +1,10 @@
-import { Ask } from '../entities/Ask'
-import { askInput } from '../options'
-import {
-  Arg,
-  Ctx,
-  Field,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-} from 'type-graphql'
+import { Arg, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql'
 import { getConnection } from 'typeorm'
-import { MyContext } from '../types'
+import { Ask } from '../entities/Ask'
 import { Bid } from '../entities/Bid'
-import { saleResolver } from './sale'
+import { askInput } from '../options'
 import { bidResolver } from './bid'
+import { saleResolver } from './sale'
 
 @ObjectType()
 class askFieldError {
@@ -35,10 +26,7 @@ class askResponse {
 @Resolver(Ask)
 export class askResolver {
   @Mutation(() => askResponse)
-  async createAsk(
-    @Arg('options') options: askInput,
-    @Ctx() { redis }: MyContext
-  ): Promise<askResponse> {
+  async createAsk(@Arg('options') options: askInput): Promise<askResponse> {
     let askId
 
     try {
