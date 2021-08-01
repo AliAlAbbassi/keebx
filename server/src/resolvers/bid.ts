@@ -1,4 +1,13 @@
-import { Arg, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql'
+import { MyContext } from '../types'
+import {
+  Arg,
+  Ctx,
+  Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from 'type-graphql'
 import { getConnection } from 'typeorm'
 import { Bid } from '../entities/Bid'
 import { bidInput } from '../options'
@@ -24,8 +33,8 @@ class bidResponse {
 export class bidResolver {
   @Mutation(() => bidResponse)
   async createBid(
-    @Arg('options') options: bidInput
-    // @Ctx() { req }: MyContext
+    @Arg('options') options: bidInput,
+    @Ctx() { redis }: MyContext
   ): Promise<bidResponse> {
     let bid
 
@@ -49,6 +58,12 @@ export class bidResolver {
         ],
       }
     }
+
+    redis.publish('sales-channel', 'new bid')
+    redis.set('keebId', options.keebId)
+    redis.set('userId', options.userId)
+    redis.set('bidId', bid.bidId)
+    console.log(`Notified sales-channel of new bid`)
 
     return { bid }
   }

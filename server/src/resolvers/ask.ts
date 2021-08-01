@@ -1,7 +1,16 @@
-import { Ask } from 'src/entities/Ask'
+import { Ask } from '../entities/Ask'
 import { askInput } from '../options'
-import { Arg, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql'
+import {
+  Arg,
+  Ctx,
+  Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from 'type-graphql'
 import { getConnection } from 'typeorm'
+import { MyContext } from '../types'
 
 @ObjectType()
 class askFieldError {
@@ -24,8 +33,8 @@ class askResponse {
 export class askResolver {
   @Mutation(() => askResponse)
   async createAsk(
-    @Arg('options') options: askInput
-    // @Ctx() { req }: MyContext
+    @Arg('options') options: askInput,
+    @Ctx() { redis }: MyContext
   ): Promise<askResponse> {
     let ask
 
@@ -49,6 +58,12 @@ export class askResolver {
       }
     }
 
+    redis.publish('sales-channel', 'new ask')
+    redis.set('keebId', options.keebId)
+    redis.set('userId', options.userId)
+    redis.set('bidId', ask.askId)
+    console.log(`Notified sales-channel of new ask`)
+
     return { ask }
   }
 
@@ -56,7 +71,7 @@ export class askResolver {
   async asks(@Arg('keebId') keebId: number) {
     const asks = await getConnection()
       .getRepository(Ask)
-      .createQueryBuilder('Ask')
+      .createQueryBuilder('ask')
       .where('ask.keebId = :keebId', { keebId })
       .getMany()
 

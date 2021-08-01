@@ -18,7 +18,11 @@ import { Ask } from './entities/Ask'
 import { Bid } from './entities/Bid'
 import { KeebResolver } from './resolvers/keeb'
 import { bidResolver } from './resolvers/bid'
+import { askResolver } from './resolvers/ask'
+import { saleResolver } from './resolvers/sale'
+import { Sale } from './entities/Sale'
 
+export const redis = new Redis(process.env.REDIS_URL)
 const main = async () => {
   await createConnection({
     type: 'postgres',
@@ -26,7 +30,7 @@ const main = async () => {
     logging: true,
     // synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
-    entities: [User, Keeb, Ask, Bid],
+    entities: [User, Keeb, Ask, Bid, Sale],
   })
 
   // conn.runMigrations()
@@ -34,7 +38,6 @@ const main = async () => {
   const app = express()
 
   const RedisStore = connectRedis(session)
-  const redis = new Redis(process.env.REDIS_URL)
   app.set('trust proxy', 1)
   app.use(
     cors({
@@ -64,7 +67,13 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, KeebResolver, bidResolver],
+      resolvers: [
+        UserResolver,
+        KeebResolver,
+        bidResolver,
+        askResolver,
+        saleResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }) => ({
