@@ -17,7 +17,7 @@ const NavBar: React.FC<NavBarProps> = ({ withSpaceBar = false }) => {
 
     if (withSpaceBar) {
         return (
-            <NavContainer>
+            <NavContainerWithColor>
                 <Logo onClick={() => router.push('/')}>KeebX</Logo>
                 <Formik
                     initialValues={initialValues}
@@ -37,8 +37,8 @@ const NavBar: React.FC<NavBarProps> = ({ withSpaceBar = false }) => {
                     <Option>Sign Up</Option>
                     <LastOption>Sell</LastOption>
                 </SecondContainer>
-            </NavContainer>
-        );
+            </NavContainerWithColor>
+        )
     }
 
     return (
@@ -51,7 +51,7 @@ const NavBar: React.FC<NavBarProps> = ({ withSpaceBar = false }) => {
                 <LastOption>Sell</LastOption>
             </SecondContainer>
         </NavContainer>
-    );
+    )
 }
 
 const NavContainer = styled.div({
@@ -62,6 +62,18 @@ const NavContainer = styled.div({
     margin: '0px 25px',
     height: '60px'
 })
+
+const NavContainerWithColor = styled.div`
+    display: flex;
+    font-family: 'Segoe UI';
+    justify-content: space-between;
+    align-items: center;
+    /* margin: 0px 25px; */
+    padding: 10px 25px;
+    height: 60px;
+    background: rgb(0,139,246);
+    background: linear-gradient(0deg, rgba(0,139,246,1) 0%, rgba(0,245,255,1) 50%, rgba(0,255,136,1) 100%);
+`
 
 const Logo = styled.p({
     fontSize: '45px',
@@ -89,15 +101,15 @@ const LastOption = styled.p`
     color: #242424;
 `
 const SearchBar = styled(Field)`
-    font-size: 30px;
+    font-size: 15px;
     border: 1px solid black;
     padding: 7px;
     width: 500px;
     color: black;
     background-color: white;
     ::placeholder {
-        color: black;
-    }
+    color: black;
+}
 `
 
 export default NavBar

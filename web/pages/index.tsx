@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components';
 import { Discover } from '../components/Discover';
 import { HomeNav } from '../components/HomeNav';
-import Layout from '../components/Layout';
+import Layout from '../layouts/Layout';
 import { MainHeader } from '../components/MainHeader';
 
 interface indexProps {
