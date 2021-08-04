@@ -1,19 +1,42 @@
 import React from 'react'
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import NavBar from './NavBar'
 
 interface LayoutProps {
-
+  layoutType: 'Default' | 'Keyboard'
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, layoutType = 'Default' }) => {
+  if (layoutType === 'Keyboard') {
+    return (
+      <LayoutContainer>
+        <GlobalStyle />
+        <NavBar withSpaceBar={true} />
+        <main>{children}</main>
+      </LayoutContainer>
+    )
+  }
+
   return (
     <LayoutContainer>
-      <NavBar />
+      <GlobalStyle />
+      <NavBar withSpaceBar={false} />
       <main>{children}</main>
     </LayoutContainer>
   );
 }
+
+const GlobalStyle = createGlobalStyle`
+        html{
+            margin:0;
+            padding: 0;
+        }
+
+        body{
+            min-height:100vh;
+            margin: 0;
+        }
+`
 
 const LayoutContainer = styled.div`
   background: rgb(0,139,246);

@@ -1,32 +1,13 @@
-import { AppProps } from 'next/dist/next-server/lib/router/router';
-import React from 'react'
-import { createGlobalStyle } from 'styled-components';
-import Layout from '../components/Layout';
+import type { NextComponentType } from 'next';
+import { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
+import React, { ReactNode } from 'react';
 
-const GlobalStyle = createGlobalStyle`
-        html{
-            margin:0;
-            padding: 0;
-        }
-
-        body{
-            min-height:100vh;
-            margin: 0;
-        }
-`
-const theme = {
-    colors: {
-        primary: "#fafafa",
-    },
-}
-
-const MyApp = ({ Component, pageProps }: AppProps) => {
-    return (
-        <Layout>
-            <GlobalStyle />
-            <Component {...pageProps} />
-        </Layout>
-    );
-}
+const MyApp: NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({
+    Component,
+    pageProps,
+}: AppLayoutProps) => {
+    const getLayout = Component.getLayout || ((page: ReactNode) => page);
+    return getLayout(<Component {...pageProps} />);
+};
 
 export default MyApp

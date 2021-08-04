@@ -48,6 +48,8 @@ const MainHeading = styled.p`
   width: fit-content;
   height: fit-content;
   padding: 5px; 
+  text-decoration: none;
+  cursor: default;
 `
 
 const SearchBar = styled(Field)`

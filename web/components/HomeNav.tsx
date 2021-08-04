@@ -1,3 +1,4 @@
+import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react'
 import styled from 'styled-components';
 
@@ -12,12 +13,15 @@ export const HomeNav: React.FC<HomeNavProps> = ({ }) => {
     const [underlineIV, setUnderlineIV] = useState('')
     const [underlineV, setUnderlineV] = useState('')
 
+    const router = useRouter()
+
     const handleFirst = () => {
         setUnderlineFirst('3px solid black')
         setUnderlineSecond('')
         setUnderlineThird('')
         setUnderlineIV('')
         setUnderlineV('')
+        router.push('/')
     }
 
     const handleSecond = () => {
@@ -26,6 +30,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({ }) => {
         setUnderlineThird('')
         setUnderlineIV('')
         setUnderlineV('')
+        router.push('/keyboard')
     }
 
     const handleThird = () => {
@@ -34,6 +39,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({ }) => {
         setUnderlineThird('3px solid black')
         setUnderlineIV('')
         setUnderlineV('')
+        router.push('/keycaps')
     }
 
     const handleIV = () => {
@@ -42,6 +48,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({ }) => {
         setUnderlineThird('')
         setUnderlineIV('3px solid black')
         setUnderlineV('')
+        router.push('./switches')
     }
     const handleV = () => {
         setUnderlineFirst('')
@@ -49,6 +56,7 @@ export const HomeNav: React.FC<HomeNavProps> = ({ }) => {
         setUnderlineThird('')
         setUnderlineIV('')
         setUnderlineV('3px solid black')
+        router.push('./custom')
     }
 
     return (
