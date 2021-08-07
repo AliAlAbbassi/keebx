@@ -1,0 +1,13 @@
+query keeb($id: Float!) {
+  keeb(keebId: $id) {
+    id
+    title
+    imageUrl
+    ticker
+    condition
+    authenticity
+    switches
+    createdAt
+    updatedAt
+  }
+}

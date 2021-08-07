@@ -3,17 +3,25 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.4.5",
     "formik": "^2.2.9",
+    "graphql": "^15.5.1",
     "next": "latest",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-is": "^17.0.2",
-    "styled-components": "^5.2.3"
+    "styled-components": "^5.2.3",
+    "yarn": "^1.22.11"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.0.1",
+    "@graphql-codegen/typescript": "2.0.0",
+    "@graphql-codegen/typescript-operations": "2.0.1",
+    "@graphql-codegen/typescript-react-apollo": "3.0.0",
     "@types/node": "15.0.0",
     "@types/react": "17.0.4",
     "@types/react-dom": "17.0.3",

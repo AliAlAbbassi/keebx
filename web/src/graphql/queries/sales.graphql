@@ -1,0 +1,11 @@
+query sales($keebId: Float!) {
+  sales(keebId: $keebId) {
+    saleId
+    salePrice
+    bidId
+    askId
+    keebId
+    createdAt
+    updatedAt
+  }
+}

@@ -1,25 +1,29 @@
 import { NextLayoutComponentType } from 'next';
-import React from 'react';
+import React from 'react'
 import styled from 'styled-components';
-import Layout from '../layouts/Layout';
+// import { ProductsSection } from '../components/ProductsSection';
 import { SideBar } from '../components/SideBar';
-import { ProductsSection } from '../components/ProductsSection';
-import { Links, Options } from '../data';
+import { Links, Options } from '../../data';
+import Layout from '../layouts/Layout';
 
-interface keyboardProps {
+interface keycapsProps {
+
 }
 
-const keyboard: NextLayoutComponentType<keyboardProps> = ({ }) => {
+const keycaps: NextLayoutComponentType<keycapsProps> = ({ }) => {
     return (
         <Container>
             <SideBar Links={Links} Options={Options} />
             <ProductsSectionContainer>
-                <ProductsSection />
+                {/* <ProductsSection /> */}
             </ProductsSectionContainer>
         </Container>
-    );
+    )
 }
 
+const ProductsSectionContainer = styled.div`
+    grid-column: span 2;
+`
 const Container = styled.div`
     display: grid;
     grid-template-columns: repeat(3, minmax(200px, 1fr));
@@ -27,13 +31,11 @@ const Container = styled.div`
     height: 89.5vh;
     font-family: 'Segoe UI';
 `
-const ProductsSectionContainer = styled.div`
-    grid-column: span 2;
-`
 
-keyboard.getLayout = (page) => (
+keycaps.getLayout = (page) => (
     <Layout layoutType='Keyboard'>
         {page}
     </Layout>
 )
-export default keyboard
+
+export default keycaps

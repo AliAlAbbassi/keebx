@@ -1,9 +1,9 @@
-import { Field, Form, Formik } from 'formik';
+import { Field, Formik } from 'formik';
 import { useRouter } from 'next/dist/client/router';
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
 
-interface MenuBarProps {
+interface SideBarProps {
     Links: {
         title: string
         url: string
@@ -19,7 +19,7 @@ interface FormValues {
     fieldOption: string
 }
 
-export const SideBar: React.FC<MenuBarProps> = ({ Links, Options }) => {
+export const SideBar: React.FC<SideBarProps> = ({ Links, Options }) => {
     const router = useRouter()
     const initialValues: FormValues = { fieldOption: '' }
     const handleSubmit = (e: any) => {
@@ -28,22 +28,21 @@ export const SideBar: React.FC<MenuBarProps> = ({ Links, Options }) => {
     return (
         <Container>
             <SideBarContainer>
-
                 <LinksContainer>
                     {Links.map(({ title, url }) => (
-                        <LinksText onClick={() => router.push(url)}>{title}</LinksText>
+                        <LinksText key={url} onClick={() => router.push(url)}>{title}</LinksText>
                     ))}
                 </LinksContainer>
                 <OptionsContainer>
                     {Options.map(({ options, title }) => (
-                        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                        <Formik key={title} initialValues={initialValues} onSubmit={handleSubmit}>
                             <OptionContainer key={title}>
-                                <OptionsTitle>{title}</OptionsTitle>
+                                <OptionsTitle key={title}>{title}</OptionsTitle>
                                 <OptionForm key={title}>
                                     {
                                         options.map((option: string) => (
-                                            <label>
-                                                <OptionsText key={option} type='radio' name={option} value={option} />
+                                            <label key={option}>
+                                                <OptionsText key={option} type='checkbox' name={option} value={option} />
                                                 {option}
                                             </label>
                                         ))
@@ -55,7 +54,7 @@ export const SideBar: React.FC<MenuBarProps> = ({ Links, Options }) => {
                 </OptionsContainer>
             </SideBarContainer>
         </Container >
-    );
+    )
 }
 
 const Container = styled.div`
@@ -65,7 +64,7 @@ const Container = styled.div`
     align-items: center;
 `
 const SideBarContainer = styled.div`
-    
+
 `
 
 const LinksText = styled.p`
@@ -90,13 +89,14 @@ const OptionContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-top: 15px;
 `
 const OptionsTitle = styled.p`
     font-weight: 600;
     font-size: 20px;
     max-height: 0px;
     text-decoration: none;
-    cursor: pointer;
+    cursor: default;
 `
 const OptionsText = styled(Field)`
     font-weight: 600;
@@ -110,5 +110,5 @@ const OptionsText = styled(Field)`
 const OptionForm = styled.div`
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    margin-top: 15px;
 `

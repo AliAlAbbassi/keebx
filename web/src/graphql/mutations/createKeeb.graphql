@@ -1,0 +1,19 @@
+mutation createKeeb($options: KeebOptions!) {
+  createKeeb(options: $options) {
+    keeb {
+      id
+      title
+      ticker
+      imageUrl
+      condition
+      authenticity
+      switches
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
