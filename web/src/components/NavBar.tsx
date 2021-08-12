@@ -1,7 +1,9 @@
+import { useApolloClient } from '@apollo/client';
 import { Field, Form, Formik } from 'formik';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react'
 import styled from 'styled-components'
+import { useLogoutMutation, useMeQuery } from '../generated/graphql';
 
 interface NavBarProps {
     withSpaceBar: boolean
@@ -14,6 +16,10 @@ interface FormValues {
 const NavBar: React.FC<NavBarProps> = ({ withSpaceBar = false }) => {
     const initialValues: FormValues = { searchQuery: '' }
     const router = useRouter()
+
+    const [logout] = useLogoutMutation();
+    const apolloClient = useApolloClient();
+    const { data, loading } = useMeQuery()
 
     if (withSpaceBar) {
         return (
@@ -31,12 +37,25 @@ const NavBar: React.FC<NavBarProps> = ({ withSpaceBar = false }) => {
                         <SearchBar id='searchQuery' name='searchQuery' placeholder='search' />
                     </Form>
                 </Formik>
-                <SecondContainer>
-                    <Option>Browse</Option>
-                    <Option>Login</Option>
-                    <Option>Sign Up</Option>
-                    <LastOption>Sell</LastOption>
-                </SecondContainer>
+                {loading && !data?.me ? (
+                    <SecondContainer>
+                        <Option>Browse</Option>
+                        <Option>Login</Option>
+                        <Option>Sign Up</Option>
+                        <LastOption>Sell</LastOption>
+                    </SecondContainer>
+                ) : (
+                    <SecondContainer>
+                        <Option>Browse</Option>
+                        <Option>{data?.me}</Option>
+                        <Option onClick={async () => {
+                            await logout()
+                            await apolloClient.resetStore()
+                        }}>logout</Option>
+                        <LastOption>Sell</LastOption>
+                    </SecondContainer>
+
+                )}
             </NavContainerWithColor>
         )
     }
