@@ -37,7 +37,7 @@ const NavBar: React.FC<NavBarProps> = ({ withSpaceBar = false }) => {
                         <SearchBar id='searchQuery' name='searchQuery' placeholder='search' />
                     </Form>
                 </Formik>
-                {loading && !data?.me ? (
+                {(loading || !data?.me) ? (
                     <SecondContainer>
                         <Option>Browse</Option>
                         <Option onClick={() => router.push('/login')}>Login</Option>
@@ -65,8 +65,8 @@ const NavBar: React.FC<NavBarProps> = ({ withSpaceBar = false }) => {
             <Logo onClick={() => router.push('/')}>KeebX</Logo>
             <SecondContainer>
                 <Option>Browse</Option>
-                <Option>Login</Option>
-                <Option>Sign Up</Option>
+                <Option onClick={() => router.push('/login')}>Login</Option>
+                <Option onClick={() => router.push('/register')}>Sign Up</Option>
                 <LastOption>Sell</LastOption>
             </SecondContainer>
         </NavContainer>

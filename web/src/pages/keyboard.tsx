@@ -52,6 +52,7 @@ const Container = styled.div`
 `
 const ProductsSectionContainer = styled.div`
     grid-column: span 2;
+    margin-top: 22px;
 `
 
 keyboard.getLayout = (page) => (

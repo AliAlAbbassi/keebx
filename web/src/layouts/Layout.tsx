@@ -5,7 +5,7 @@ import { CLIENT } from '../../env';
 import NavBar from '../components/NavBar'
 
 interface LayoutProps {
-  layoutType: 'Default' | 'Keyboard'
+  layoutType: 'Default' | 'Keyboard' | 'NoBgColor'
 }
 
 const client = new ApolloClient({
@@ -23,6 +23,18 @@ const Layout: React.FC<LayoutProps> = ({ children, layoutType = 'Default' }) => 
           <NavBar withSpaceBar={true} />
           <main>{children}</main>
         </LayoutContainerKeyboard>
+      </ApolloProvider>
+    )
+  }
+
+  if (layoutType === 'NoBgColor') {
+    return (
+      <ApolloProvider client={client}>
+        <LayoutContainer>
+          <GlobalStyle />
+          <NavBar withSpaceBar={false} />
+        </LayoutContainer>
+        <main>{children}</main>
       </ApolloProvider>
     )
   }

@@ -1,18 +1,20 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
 import { Keeb } from '../generated/graphql';
 
 interface ProductCardProps {
     keeb: Keeb
+    price: number
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ keeb }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ keeb, price }) => {
     return (
         <Container>
             <Media src={keeb.imageUrl} />
             <Title>{keeb.title}</Title>
             <DescContainer>
-                <Ticker>{keeb.ticker}</Ticker>
+                <Ticker>#{keeb.ticker}</Ticker>
+                <Price>${price}</Price>
             </DescContainer>
         </Container>
     )
@@ -37,13 +39,17 @@ const Title = styled.p`
     font-weight: 500;
 `
 const DescContainer = styled.div`
-    
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    font-size: 17px;
 `
 
 const Ticker = styled.div`
-    
+    opacity: 75%;
+    margin: 3px;
 `
-
-const Description = styled.div`
-    
+const Price = styled.div`
+    color: black;
+    margin: 3px;
 `
