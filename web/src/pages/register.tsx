@@ -3,9 +3,11 @@ import { NextLayoutComponentType } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import styled from 'styled-components';
+import { InputField } from '../components/InputField';
 import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import Layout from '../layouts/Layout';
 import { toErrorMap } from '../utils/toErrorMap';
+import { Box } from '@chakra-ui/react'
 
 interface registerProps {
 
@@ -44,25 +46,59 @@ const register: NextLayoutComponentType<registerProps> = ({ }) => {
                     }
                 })
             }}>
-                <Form>
-                    <Field id='email' name='email' placeholder='email' />
-                    <Field id='username' name='username' placeholder='username' />
-                    <Field id='password' name='password' placeholder='password' />
-                    <button type='submit'>submit</button>
-                </Form>
+                <FormContainer>
+                    <Box mb={5}>
+                        <InputField
+                            name="username"
+                            placeholder="username"
+                            label="Username"
+                            fontsize={23}
+                        />
+                    </Box>
+                    <Box mb={5}>
+                        <InputField
+                            name="email"
+                            placeholder="email"
+                            label="Email"
+                            fontsize={23}
+                        />
+                    </Box>
+                    <InputField
+                        name="password"
+                        placeholder="password"
+                        label="Password"
+                        fontsize={23}
+                    />
+                    <ButtonStyle type='submit'>register</ButtonStyle>
+                </FormContainer>
             </Formik>
         </Container>
     )
 }
 
+const FormContainer = styled(Form)`
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 100px;
+            padding: 0px 600px;
+            `
+const ButtonStyle = styled.button`
+            font-size: 17px;
+            padding: 5px;
+            background-color:#00f7ff;
+            width: 100px;
+            margin-top: 20px;
+            `
+
 register.getLayout = (page) => (
-    <Layout layoutType='Default'>
+    <Layout layoutType='NoBgColor'>
         {page}
     </Layout>
 )
 
 const Container = styled.div`
-  font-family: 'Segoe UI';
-  height: 55vh;
-`
+            font-family: 'Segoe UI';
+            height: 55vh;
+            `
 export default register
