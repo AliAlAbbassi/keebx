@@ -100,6 +100,17 @@ export class bidResolver {
     return bid
   }
 
+  @Query(() => Bid, { nullable: true })
+  async getHighestBid(@Arg('keebId') keebId: number) {
+    const highestBid = await Bid.query(`
+      SELECT MAX(bidPrice) as highestBid, keebId
+      FROM bid
+      WHERE keebId == ${keebId} 
+  `)
+
+    return highestBid
+  }
+
   @Mutation(() => bidResponse)
   async deleteBid(@Arg('bidId') bidId: number) {
     let bid
