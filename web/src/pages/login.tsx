@@ -32,7 +32,7 @@ const login: NextLayoutComponentType<loginProps> = ({ }) => {
                                     me: data?.login.user,
                                 },
                             });
-                            cache.evict({ fieldName: "posts:{}" });
+                            cache.evict({ fieldName: "keebs:{}" });
                         },
                     });
                     if (response.data?.login.errors) {

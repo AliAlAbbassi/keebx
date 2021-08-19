@@ -63,12 +63,25 @@ const NavBar: React.FC<NavBarProps> = ({ withSpaceBar = false }) => {
     return (
         <NavContainer>
             <Logo onClick={() => router.push('/')}>KeebX</Logo>
-            <SecondContainer>
-                <Option>Browse</Option>
-                <Option onClick={() => router.push('/login')}>Login</Option>
-                <Option onClick={() => router.push('/register')}>Sign Up</Option>
-                <LastOption>Sell</LastOption>
-            </SecondContainer>
+            {(loading || !data?.me) ? (
+                <SecondContainer>
+                    <Option>Browse</Option>
+                    <Option onClick={() => router.push('/login')}>Login</Option>
+                    <Option onClick={() => router.push('/register')}>Sign Up</Option>
+                    <LastOption>Sell</LastOption>
+                </SecondContainer>
+            ) : (
+                <SecondContainer>
+                    <Option>Browse</Option>
+                    <Option>{data?.me.username}</Option>
+                    <Option onClick={async () => {
+                        await logout()
+                        await apolloClient.resetStore()
+                    }}>logout</Option>
+                    <LastOption>Sell</LastOption>
+                </SecondContainer>
+
+            )}
         </NavContainer>
     )
 }
