@@ -1,3 +1,4 @@
+import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import styled from 'styled-components';
 import { Keeb } from '../generated/graphql';
@@ -8,8 +9,9 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ keeb, price }) => {
+    const router = useRouter()
     return (
-        <Container>
+        <Container onClick={() => router.push(`/Keeb/${keeb.id}`)}>
             <Media src={keeb.imageUrl} />
             <Title>{keeb.title}</Title>
             <DescContainer>

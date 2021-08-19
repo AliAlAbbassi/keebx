@@ -1,4 +1,5 @@
-import { Field, Form, Formik } from 'formik';
+import { Box } from '@chakra-ui/react';
+import { Form, Formik } from 'formik';
 import { NextLayoutComponentType } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
@@ -7,7 +8,6 @@ import { InputField } from '../components/InputField';
 import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import Layout from '../layouts/Layout';
 import { toErrorMap } from '../utils/toErrorMap';
-import { Box } from '@chakra-ui/react'
 
 interface registerProps {
 
