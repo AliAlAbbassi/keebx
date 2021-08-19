@@ -101,7 +101,7 @@ export class bidResolver {
   }
 
   @Query(() => Bid, { nullable: true })
-  async getHighestBid(@Arg('keebId') keebId: number) {
+  async highestBid(@Arg('keebId') keebId: number) {
     const highestBid = await Bid.query(`
       SELECT MAX(bidPrice) as highestBid, keebId
       FROM bid

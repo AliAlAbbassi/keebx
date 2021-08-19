@@ -89,6 +89,20 @@ export class askResolver {
 
     return ask
   }
+
+  @Query(() => Ask, { nullable: true })
+  async lowestAsk(@Arg('keebId') keebId: number) {
+    const lowestAsk = await getConnection()
+      .getRepository(Ask)
+      .createQueryBuilder('ask')
+      .where('ask.keebId = :keebId', { keebId })
+      .orderBy('ask.askPrice', 'ASC')
+      .limit(1)
+      .getOne()
+
+    return lowestAsk
+  }
+
   @Query(() => [Ask], { nullable: true })
   async asks(@Arg('keebId') keebId: number) {
     const asks = await getConnection()
