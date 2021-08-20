@@ -1,9 +1,8 @@
 import { NextLayoutComponentType } from 'next';
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
-import { ProductsSection } from '../components/ProductsSection';
-import { SideBar } from '../components/SideBar';
 import { Links, Options } from '../../data';
+import { SideBar } from '../components/SideBar';
 import Layout from '../layouts/Layout';
 
 interface switchesProps {
@@ -15,7 +14,8 @@ const switches: NextLayoutComponentType<switchesProps> = ({ }) => {
         <Container>
             <SideBar Links={Links} Options={Options} />
             <ProductsSectionContainer>
-                <ProductsSection />
+                {/* <ProductsSection /> */}
+                no switches
             </ProductsSectionContainer>
         </Container>
     )

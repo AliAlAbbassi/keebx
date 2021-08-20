@@ -39,6 +39,7 @@ const Title = styled.p`
     margin: 0px;
     padding: 5px;
     font-weight: 500;
+    cursor: pointer;
 `
 const DescContainer = styled.div`
     display: flex;

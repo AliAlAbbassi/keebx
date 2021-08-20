@@ -7,7 +7,6 @@ import { Links, Options } from '../../data';
 import Layout from '../layouts/Layout';
 
 interface keycapsProps {
-
 }
 
 const keycaps: NextLayoutComponentType<keycapsProps> = ({ }) => {
@@ -16,6 +15,7 @@ const keycaps: NextLayoutComponentType<keycapsProps> = ({ }) => {
             <SideBar Links={Links} Options={Options} />
             <ProductsSectionContainer>
                 {/* <ProductsSection /> */}
+                no keycaps
             </ProductsSectionContainer>
         </Container>
     )

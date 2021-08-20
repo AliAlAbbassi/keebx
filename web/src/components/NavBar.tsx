@@ -47,7 +47,7 @@ const NavBar: React.FC<NavBarProps> = ({ withSpaceBar = false }) => {
                 ) : (
                     <SecondContainer>
                         <Option>Browse</Option>
-                        <Option>{data?.me}</Option>
+                        <Option>{data?.me.username}</Option>
                         <Option onClick={async () => {
                             await logout()
                             await apolloClient.resetStore()
