@@ -178,11 +178,14 @@ export type Query = {
   keebs?: Maybe<Array<Keeb>>;
   keebsWithPagination?: Maybe<Array<Keeb>>;
   sales?: Maybe<Array<Sale>>;
+  lastSale?: Maybe<Sale>;
   sale?: Maybe<Sale>;
   ask?: Maybe<Ask>;
+  lowestAsk?: Maybe<Ask>;
   asks?: Maybe<Array<Ask>>;
   bids?: Maybe<Array<Bid>>;
   bid?: Maybe<Bid>;
+  highestBid?: Maybe<Bid>;
 };
 
 
@@ -202,6 +205,11 @@ export type QuerySalesArgs = {
 };
 
 
+export type QueryLastSaleArgs = {
+  keebId: Scalars['Float'];
+};
+
+
 export type QuerySaleArgs = {
   saleId: Scalars['Float'];
 };
@@ -209,6 +217,11 @@ export type QuerySaleArgs = {
 
 export type QueryAskArgs = {
   askId: Scalars['Float'];
+};
+
+
+export type QueryLowestAskArgs = {
+  keebId: Scalars['Float'];
 };
 
 
@@ -224,6 +237,11 @@ export type QueryBidsArgs = {
 
 export type QueryBidArgs = {
   bidId: Scalars['Float'];
+};
+
+
+export type QueryHighestBidArgs = {
+  keebId: Scalars['Float'];
 };
 
 export type Sale = {
@@ -423,12 +441,33 @@ export type BidsQueryVariables = Exact<{
 
 export type BidsQuery = { __typename?: 'Query', bids?: Maybe<Array<{ __typename?: 'Bid', bidId: number, bidPrice: number, keebId: number, userId: number, title: string, ticker: string, createdAt: string, updatedAt: string }>> };
 
+export type HighestBidQueryVariables = Exact<{
+  keebId: Scalars['Float'];
+}>;
+
+
+export type HighestBidQuery = { __typename?: 'Query', highestBid?: Maybe<{ __typename?: 'Bid', bidId: number, bidPrice: number, userId: number, keebId: number, title: string, ticker: string, createdAt: string, updatedAt: string }> };
+
 export type KeebQueryVariables = Exact<{
   id: Scalars['Float'];
 }>;
 
 
 export type KeebQuery = { __typename?: 'Query', keeb?: Maybe<{ __typename?: 'Keeb', id: number, title: string, imageUrl: string, ticker: string, condition: Condition, authenticity: number, switches: Array<string>, createdAt: string, updatedAt: string }> };
+
+export type LastSaleQueryVariables = Exact<{
+  keebId: Scalars['Float'];
+}>;
+
+
+export type LastSaleQuery = { __typename?: 'Query', lastSale?: Maybe<{ __typename?: 'Sale', saleId: number, salePrice: number, bidId: number, askId: number, keebId: number, createdAt: string, updatedAt: string }> };
+
+export type LowestAskQueryVariables = Exact<{
+  keebId: Scalars['Float'];
+}>;
+
+
+export type LowestAskQuery = { __typename?: 'Query', lowestAsk?: Maybe<{ __typename?: 'Ask', askId: number, askPrice: number, userId: number, keebId: number, title: string, ticker: string, createdAt: string, updatedAt: string }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -901,6 +940,48 @@ export function useBidsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BidsQ
 export type BidsQueryHookResult = ReturnType<typeof useBidsQuery>;
 export type BidsLazyQueryHookResult = ReturnType<typeof useBidsLazyQuery>;
 export type BidsQueryResult = Apollo.QueryResult<BidsQuery, BidsQueryVariables>;
+export const HighestBidDocument = gql`
+    query highestBid($keebId: Float!) {
+  highestBid(keebId: $keebId) {
+    bidId
+    bidPrice
+    userId
+    keebId
+    title
+    ticker
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useHighestBidQuery__
+ *
+ * To run a query within a React component, call `useHighestBidQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHighestBidQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHighestBidQuery({
+ *   variables: {
+ *      keebId: // value for 'keebId'
+ *   },
+ * });
+ */
+export function useHighestBidQuery(baseOptions: Apollo.QueryHookOptions<HighestBidQuery, HighestBidQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HighestBidQuery, HighestBidQueryVariables>(HighestBidDocument, options);
+      }
+export function useHighestBidLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HighestBidQuery, HighestBidQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HighestBidQuery, HighestBidQueryVariables>(HighestBidDocument, options);
+        }
+export type HighestBidQueryHookResult = ReturnType<typeof useHighestBidQuery>;
+export type HighestBidLazyQueryHookResult = ReturnType<typeof useHighestBidLazyQuery>;
+export type HighestBidQueryResult = Apollo.QueryResult<HighestBidQuery, HighestBidQueryVariables>;
 export const KeebDocument = gql`
     query keeb($id: Float!) {
   keeb(keebId: $id) {
@@ -944,6 +1025,89 @@ export function useKeebLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<KeebQ
 export type KeebQueryHookResult = ReturnType<typeof useKeebQuery>;
 export type KeebLazyQueryHookResult = ReturnType<typeof useKeebLazyQuery>;
 export type KeebQueryResult = Apollo.QueryResult<KeebQuery, KeebQueryVariables>;
+export const LastSaleDocument = gql`
+    query lastSale($keebId: Float!) {
+  lastSale(keebId: $keebId) {
+    saleId
+    salePrice
+    bidId
+    askId
+    keebId
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useLastSaleQuery__
+ *
+ * To run a query within a React component, call `useLastSaleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLastSaleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLastSaleQuery({
+ *   variables: {
+ *      keebId: // value for 'keebId'
+ *   },
+ * });
+ */
+export function useLastSaleQuery(baseOptions: Apollo.QueryHookOptions<LastSaleQuery, LastSaleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LastSaleQuery, LastSaleQueryVariables>(LastSaleDocument, options);
+      }
+export function useLastSaleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LastSaleQuery, LastSaleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LastSaleQuery, LastSaleQueryVariables>(LastSaleDocument, options);
+        }
+export type LastSaleQueryHookResult = ReturnType<typeof useLastSaleQuery>;
+export type LastSaleLazyQueryHookResult = ReturnType<typeof useLastSaleLazyQuery>;
+export type LastSaleQueryResult = Apollo.QueryResult<LastSaleQuery, LastSaleQueryVariables>;
+export const LowestAskDocument = gql`
+    query lowestAsk($keebId: Float!) {
+  lowestAsk(keebId: $keebId) {
+    askId
+    askPrice
+    userId
+    keebId
+    title
+    ticker
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useLowestAskQuery__
+ *
+ * To run a query within a React component, call `useLowestAskQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLowestAskQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLowestAskQuery({
+ *   variables: {
+ *      keebId: // value for 'keebId'
+ *   },
+ * });
+ */
+export function useLowestAskQuery(baseOptions: Apollo.QueryHookOptions<LowestAskQuery, LowestAskQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LowestAskQuery, LowestAskQueryVariables>(LowestAskDocument, options);
+      }
+export function useLowestAskLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LowestAskQuery, LowestAskQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LowestAskQuery, LowestAskQueryVariables>(LowestAskDocument, options);
+        }
+export type LowestAskQueryHookResult = ReturnType<typeof useLowestAskQuery>;
+export type LowestAskLazyQueryHookResult = ReturnType<typeof useLowestAskLazyQuery>;
+export type LowestAskQueryResult = Apollo.QueryResult<LowestAskQuery, LowestAskQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
