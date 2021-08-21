@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
-import { KeebsQuery, useAsksQuery } from '../generated/graphql';
+import { KeebsQuery, useLastSaleQuery, useLowestAskQuery } from '../generated/graphql';
 import { ProductCard } from './ProductCard';
 
 interface ProductsSectionProps {
@@ -11,17 +11,19 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ keebs }) => {
     return (
         <Container>
             {keebs.keebs?.map((keeb) => {
-                const { data } = useAsksQuery({
+                const { data } = useLastSaleQuery({
                     variables: {
                         keebId: keeb.id
                     }
                 })
-                let price: number = 0
-                data?.asks?.map((ask) => {
-                    if (ask.keebId === keeb.id) price = ask.askPrice
+
+                const { data: askPrice } = useLowestAskQuery({
+                    variables: {
+                        keebId: keeb.id
+                    }
                 })
                 return (
-                    <ProductCard key={keeb.id} keeb={keeb} price={price} />
+                    <ProductCard key={keeb.id} keeb={keeb} price={data?.lastSale?.salePrice! || askPrice?.lowestAsk?.askPrice!} />
                 )
             })}
         </Container>

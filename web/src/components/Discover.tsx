@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import { Keeb, useAsksQuery } from '../generated/graphql';
+import { Keeb, useAsksQuery, useLastSaleQuery, useLowestAskQuery } from '../generated/graphql';
 import { ProductCard } from './ProductCard';
 import { ProductsSection } from './ProductsSection';
 
@@ -24,17 +24,19 @@ export const Discover: React.FC<DiscoverProps> = ({ keebs }) => {
     return (
         <DiscoverContainer>
             {keebs.map((keeb) => {
-                const { data } = useAsksQuery({
+                const { data } = useLastSaleQuery({
                     variables: {
                         keebId: keeb.id
                     }
                 })
-                let price: number = 0
-                data?.asks?.map((ask) => {
-                    if (ask.keebId === keeb.id) price = ask.askPrice
+
+                const { data: askPrice } = useLowestAskQuery({
+                    variables: {
+                        keebId: keeb.id
+                    }
                 })
                 return (
-                    <ProductCard keeb={keeb} price={price} />
+                    <ProductCard keeb={keeb} price={data?.lastSale?.salePrice! || askPrice?.lowestAsk?.askPrice!} />
                 )
             })}
         </DiscoverContainer >
