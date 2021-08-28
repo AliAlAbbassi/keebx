@@ -37,33 +37,35 @@ const Keeb: NextLayoutComponentType<KeebProps> = ({ }) => {
             <h1>{data?.keeb?.title}</h1>
             <DetailsContainer>
                 <DetailsStyle>Condition: {data?.keeb?.condition}</DetailsStyle>
-                <DetailsStyle>|</DetailsStyle>
                 <DetailsStyle>ticker: #{data?.keeb?.ticker}</DetailsStyle>
-                <DetailsStyle>|</DetailsStyle>
                 <DetailsStyle>authenticity: {data?.keeb?.authenticity}%</DetailsStyle>
             </DetailsContainer>
-            <PriceContainer>
-                <DetailContainer>
-                    <DetailsStyle>Last Sale: </DetailsStyle>
-                    <DetailsBoldStyle>${lastSale?.lastSale?.salePrice}</DetailsBoldStyle>
-                </DetailContainer>
-                <BidContainer
-                    onClick={() => {
-                        router.push(`/buy/${idForUrl}`)
-                    }}
-                >
-                    <BidPrice>Lowest Ask: ${lowestAsk?.lowestAsk?.askPrice || 0}</BidPrice>
-                    <DetailsStyle>|</DetailsStyle>
-                    <BidBoldText>Buy or Bid</BidBoldText>
-                </BidContainer>
-                <AskContainer>
-                    <AskPrice>Highest Bid: ${highestBid?.highestBid?.bidPrice || 0}</AskPrice>
-                    <DetailsStyle>|</DetailsStyle>
-                    <AskBoldText>Sell or Ask</AskBoldText>
-                </AskContainer>
-            </PriceContainer>
-            <Media src={data?.keeb?.imageUrl} />
-            <DetailsBoldStyle>Sales history</DetailsBoldStyle>
+            <BidAskMediaContainer>
+                <PriceContainer>
+                    <BidLowestAskContainer>
+                        <LowestAsk>Lowest Ask: ${lowestAsk?.lowestAsk?.askPrice || 0}</LowestAsk>
+                        <BidContainer
+                            onClick={() => {
+                                router.push(`/buy/${idForUrl}`)
+                            }}
+                        >
+                            <BidBoldText>Buy or Bid</BidBoldText>
+                        </BidContainer>
+                    </BidLowestAskContainer>
+                    <AskHighestBidContainer>
+                        <HighestBid>Highest Bid: ${highestBid?.highestBid?.bidPrice || 0}</HighestBid>
+                        <AskContainer>
+                            <AskBoldText>Sell or Ask</AskBoldText>
+                        </AskContainer>
+                    </AskHighestBidContainer>
+                    <DetailContainer>
+                        <LastSaleStyle>Last Sale: </LastSaleStyle>
+                        <DetailsBoldStyle>${lastSale?.lastSale?.salePrice}</DetailsBoldStyle>
+                    </DetailContainer>
+                </PriceContainer>
+                <Media src={data?.keeb?.imageUrl} />
+            </BidAskMediaContainer>
+            {/* <DetailsBoldStyle>Sales history</DetailsBoldStyle>
             <LineChart
                 width={400}
                 height={400}
@@ -75,34 +77,46 @@ const Keeb: NextLayoutComponentType<KeebProps> = ({ }) => {
                 <CartesianGrid stroke="#f5f5f5" />
                 <Line type="monotone" dataKey="uv" stroke="#ff7300" yAxisId={0} />
                 <Line type="monotone" dataKey="pv" stroke="#387908" yAxisId={1} />
-            </LineChart>
+            </LineChart> */}
         </Container>
     )
 }
 
 const Container = styled.div`
     font-family: 'Segoe UI';
-    width: 75%;
+    width: 80%;
     margin: auto;
+    padding: 0;
 `
 
 const DetailsContainer = styled.div`
     display: flex;
     justify-content: space-between;
-    width: 34%;
-    margin: 0;
+    width: 26%;
+    margin-top: -20px;
     padding: 0;
 `
+
 const DetailContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 24%;
 `
 
 const DetailsStyle = styled.p`
-    opacity: 75%;
+    opacity: 60%;
+    font-size: 13px;
+    border: 1px solid #8B8B8B; 
+    padding: 5px;
+    border-radius: 12px;
+`
+
+const LastSaleStyle = styled.p`
+    opacity: 60%;
     font-size: 18px;
 `
+
 const DetailsBoldStyle = styled.p`
     font-size: 25px;
     margin-left: 7px;
@@ -115,31 +129,53 @@ const RouteStyle = styled.p`
 `
 
 const PriceContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
     width: 60%;
+    display: flex;
+    flex-direction: column;
+`
+
+const BidAskMediaContainer = styled.div`
+    display: flex;
+`
+
+const BidLowestAskContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 75%;
     margin-bottom: 20px;
+`
+
+const LowestAsk = styled.div`
+    font-weight: 600;
+    font-size: 20px;
+`
+
+const AskHighestBidContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 75%;
+`
+
+const HighestBid = styled.div`
+    font-weight: 600;
+    font-size: 20px;
 `
 
 const BidContainer = styled.button`
     display: flex;
-    padding: 7px;
     justify-content: space-evenly;
     align-items: center;
     background-color: #006340;
     border-radius: 10px;
-    border: 0px;
+    border: 0.5px solid black;
     box-shadow: 5px 10px solid black;
-    width: 15vw;
+    width: 11vw;
+    height: 7vh;
     cursor: pointer;
 `
-const BidPrice = styled.p`
-    font-family: 'Segoe UI';
-    font-size: 20px;
-    font-weight: 700;
-    color: white;
-    text-shadow: 10px;
-`
+
 const BidBoldText = styled.p`
     font-family: 'Segoe UI';
     font-size: 20px;
@@ -155,17 +191,11 @@ const AskContainer = styled.button`
     align-items: center;
     background-color: #ff5a5f;
     border-radius: 10px;
-    border: 0px;
+    border: 0.5px solid black;
     box-shadow: 5px 10px solid black;
-    width: 15vw;
+    width: 11vw;
+    height: 7vh;
     cursor: pointer;
-`
-const AskPrice = styled.p`
-    font-family: 'Segoe UI';
-    font-size: 20px;
-    font-weight: 700;
-    color: white;
-    text-shadow: 10px;
 `
 
 const AskBoldText = styled.p`
@@ -177,7 +207,7 @@ const AskBoldText = styled.p`
 `
 
 const Media = styled.img`
-    width: 60%;
+    width: 50%;
 `
 
 Keeb.getLayout = (page) => (

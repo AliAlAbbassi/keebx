@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { filterDataByPrice } from './reducers/filter'
+import { textDecoration } from './reducers/DynamicCss'
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
-    filterReducer: filterDataByPrice,
+    textDecoration: textDecoration,
   },
 })
 
