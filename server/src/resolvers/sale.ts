@@ -65,6 +65,19 @@ export class saleResolver {
   }
 
   @Query(() => Sale, { nullable: true })
+  async lastSale(@Arg('keebId') keebId: number) {
+    const lastSale = await getConnection()
+      .getRepository(Sale)
+      .createQueryBuilder('sale')
+      .where('sale.keebId = :keebId', { keebId })
+      .orderBy('sale.createdAt', 'DESC')
+      .limit(1)
+      .getOne()
+
+    return lastSale
+  }
+
+  @Query(() => Sale, { nullable: true })
   async sale(@Arg('saleId') saleId: number) {
     const sale = await getConnection()
       .getRepository(Sale)

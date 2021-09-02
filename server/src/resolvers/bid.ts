@@ -102,11 +102,13 @@ export class bidResolver {
 
   @Query(() => Bid, { nullable: true })
   async highestBid(@Arg('keebId') keebId: number) {
-    const highestBid = await Bid.query(`
-      SELECT MAX(bidPrice) as highestBid, keebId
-      FROM bid
-      WHERE keebId == ${keebId} 
-  `)
+    const highestBid = await getConnection()
+      .getRepository(Bid)
+      .createQueryBuilder('bid')
+      .where('bid.keebId = :keebId', { keebId: keebId })
+      .orderBy('bid.bidPrice', 'ASC')
+      .limit(1)
+      .getOne()
 
     return highestBid
   }
