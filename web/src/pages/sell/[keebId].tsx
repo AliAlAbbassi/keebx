@@ -3,63 +3,63 @@ import { NextLayoutComponentType } from "next";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { InputField } from "../../components/InputField";
-import { useLowestAskQuery } from "../../generated/graphql";
+import { useHighestBidQuery, useLowestAskQuery } from "../../generated/graphql";
 import Layout from "../../layouts/Layout";
 import { useGetIntId } from "../../utils/useGetIntId";
 import { Fatoora } from '../../components/Fatoora'
 
 
-interface BuyKeebProps { }
+interface SellKeebProps { }
 
-const BuyKeeb: NextLayoutComponentType<BuyKeebProps> = ({ }) => {
-    const [BidTextDecoration, setBidTextDecoration] = useState('underline')
-    const [BuyTextDecoration, setBuyTextDecoration] = useState('none')
-    const [switchOption, setSwitchOption] = useState<'bid' | 'buy'>('bid')
+const SellKeeb: NextLayoutComponentType<SellKeebProps> = ({ }) => {
+    const [AskTextDecoration, setAskTextDecoration] = useState('underline')
+    const [SellTextDecoration, setSellTextDecoration] = useState('none')
+    const [switchOption, setSwitchOption] = useState<'ask' | 'sell'>('ask')
 
     const [warning, setWarning] = useState('none')
 
-    const [bidPrice, setBidPrice] = useState(0)
+    const [askPrice, setAskPrice] = useState(0)
 
     // data
-    const { data: LowestAskData } = useLowestAskQuery({ variables: { keebId: useGetIntId() } })
+    const { data: highestBidData } = useHighestBidQuery({ variables: { keebId: useGetIntId() } })
 
     return (
         <Container>
             <SwitcherContainer>
-                <Bid style={{ textDecoration: BidTextDecoration }} onClick={() => {
-                    setBuyTextDecoration('none')
-                    setBidTextDecoration('underline')
-                    setSwitchOption('bid')
-                }}>Bid</Bid>
-                <Buy style={{ textDecoration: BuyTextDecoration }} onClick={() => {
-                    setBuyTextDecoration('underline')
-                    setBidTextDecoration('none')
-                    setSwitchOption('buy')
-                }}>Buy</Buy>
+                <Ask style={{ textDecoration: AskTextDecoration }} onClick={() => {
+                    setSellTextDecoration('none')
+                    setAskTextDecoration('underline')
+                    setSwitchOption('ask')
+                }}>Ask</Ask>
+                <Sell style={{ textDecoration: SellTextDecoration }} onClick={() => {
+                    setSellTextDecoration('underline')
+                    setAskTextDecoration('none')
+                    setSwitchOption('sell')
+                }}>Sell</Sell>
             </SwitcherContainer>
-            {switchOption === 'bid' ? (
+            {switchOption === 'ask' ? (
                 <>
-                    <Formik initialValues={{ bidPrice: '' }} onSubmit={(v) => {
-                        if (parseFloat(v.bidPrice) < 25) {
-                            setWarning('You must meet the minimum Bid of $25')
+                    <Formik initialValues={{ askPrice: '' }} onSubmit={(v) => {
+                        if (parseFloat(v.askPrice) < 25) {
+                            setWarning('You must meet the minimum Ask of $25')
                         } else {
                             setWarning('lessgo')
-                            setBidPrice(parseFloat(v.bidPrice)!)
+                            setAskPrice(parseFloat(v.askPrice)!)
                         }
                     }}
                         enableReinitialize
                     >
                         <Form>
                             <InputField
-                                name='bidPrice'
-                                placeholder='Enter bid (in USD)'
+                                name='askPrice'
+                                placeholder='Enter ask (in USD)'
                             />
                         </Form>
                     </Formik>
                     {warning === 'none' ? null : (
                         <>
                             {warning === 'lessgo' ? (
-                                <Fatoora bidPrice={bidPrice} askPrice={0} />
+                                <Fatoora askPrice={askPrice} bidPrice={0} />
                             ) : (
                                 <p>{warning}</p>
                             )}
@@ -68,10 +68,10 @@ const BuyKeeb: NextLayoutComponentType<BuyKeebProps> = ({ }) => {
                 </>
             ) : (
                 <AsksContainer>
-                    {LowestAskData?.lowestAsk?.askPrice ? (
+                    {highestBidData?.highestBid?.bidPrice ? (
                         <div>
-                            <p>{LowestAskData?.lowestAsk?.askPrice}</p>
-                            <Fatoora bidPrice={LowestAskData.lowestAsk.askPrice} askPrice={0} />
+                            <p>Highest Bid: ${highestBidData?.highestBid?.bidPrice}</p>
+                            <Fatoora bidPrice={highestBidData.highestBid.bidPrice} askPrice={0} />
                         </div>
                     ) : (
                         <p>no asks available</p>
@@ -95,13 +95,13 @@ const SwitcherContainer = styled.div`
             justify-content: center;
             `
 
-const Buy = styled.p`
+const Sell = styled.p`
             margin-left: 10px;
             font-size: 20px;
             cursor: pointer;
             `
 
-const Bid = styled.p`
+const Ask = styled.p`
             margin-right: 10px;
             font-size: 20px;
             cursor: pointer;
@@ -109,14 +109,11 @@ const Bid = styled.p`
 
 const AsksContainer = styled.div``
 
-const FatooraContainer = styled.div`
-`
 
-
-BuyKeeb.getLayout = (page) => (
+SellKeeb.getLayout = (page) => (
     <Layout layoutType='NoBgColor'>
         {page}
     </Layout>
 )
 
-export default BuyKeeb
+export default SellKeeb

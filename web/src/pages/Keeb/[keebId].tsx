@@ -1,9 +1,9 @@
 import { NextLayoutComponentType } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { CartesianGrid, Line, LineChart, Tooltip, XAxis } from 'recharts'
+// import { CartesianGrid, Line, LineChart, Tooltip, XAxis } from 'recharts'
 import styled from 'styled-components'
-import { useHighestBidQuery, useKeebQuery, useLastSaleQuery, useLowestAskQuery, useSalesQuery } from '../../generated/graphql'
+import { useHighestBidQuery, useKeebQuery, useLastSaleQuery, useLowestAskQuery } from '../../generated/graphql'
 import Layout from '../../layouts/Layout'
 import { useGetIntId } from '../../utils/useGetIntId'
 
@@ -23,7 +23,7 @@ const Keeb: NextLayoutComponentType<KeebProps> = ({ }) => {
     const { data: lastSale } = useLastSaleQuery({ variables: { keebId: useGetIntId() } })
     const { data: highestBid } = useHighestBidQuery({ variables: { keebId: useGetIntId() } })
     const { data: lowestAsk } = useLowestAskQuery({ variables: { keebId: useGetIntId() } })
-    const { data: sales } = useSalesQuery({ variables: { keebId: useGetIntId() } })
+    // const { data: sales } = useSalesQuery({ variables: { keebId: useGetIntId() } })
 
     if (loading) {
         return (
@@ -54,7 +54,11 @@ const Keeb: NextLayoutComponentType<KeebProps> = ({ }) => {
                     </BidLowestAskContainer>
                     <AskHighestBidContainer>
                         <HighestBid>Highest Bid: ${highestBid?.highestBid?.bidPrice || 0}</HighestBid>
-                        <AskContainer>
+                        <AskContainer
+                            onClick={() => {
+                                router.push(`/sell/${idForUrl}`)
+                            }}
+                        >
                             <AskBoldText>Sell or Ask</AskBoldText>
                         </AskContainer>
                     </AskHighestBidContainer>

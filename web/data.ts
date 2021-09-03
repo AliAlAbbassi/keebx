@@ -5,7 +5,11 @@ type Links = {
 
 type Option = {
   title: string
-  options: string[]
+  options: {
+    id: number
+    price: number
+    greaterThan: boolean
+  }[]
 }
 
 export const Links: Links = [
@@ -26,6 +30,27 @@ export const Links: Links = [
 export const Options: Option[] = [
   {
     title: 'Price',
-    options: ['$50', '$50 to $100', '$100 to $200', '$200 to $300', '$300+'],
+    options: [
+      {
+        id: 0,
+        price: 50,
+        greaterThan: false,
+      },
+      {
+        id: 1,
+        price: 100,
+        greaterThan: false,
+      },
+      {
+        id: 2,
+        price: 200,
+        greaterThan: false,
+      },
+      {
+        id: 3,
+        price: 300,
+        greaterThan: true,
+      },
+    ],
   },
 ]

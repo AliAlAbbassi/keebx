@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Layout from '../layouts/Layout';
 import { SideBar } from '../components/SideBar';
-import { ProductsSection } from '../components/ProductsSection';
+import ProductsSection from '../components/ProductsSection';
 import { Links, Options } from '../../data';
 import { useKeebsQuery } from '../generated/graphql';
 

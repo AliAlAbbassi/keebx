@@ -9,3 +9,5 @@ export type Keeb = {
     createdAt: Date
     updatedAt: Date
 }
+
+export type Product = 'Keeb' | 'Switch' | 'Keycaps' | 'custom'

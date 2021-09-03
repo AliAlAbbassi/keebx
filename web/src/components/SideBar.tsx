@@ -1,7 +1,10 @@
 import { Field, Formik } from 'formik';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { setPriceFilter } from '../redux/actions';
+import { AppDispatch } from '../redux/store';
 
 interface SideBarProps {
     Links: {
@@ -11,7 +14,11 @@ interface SideBarProps {
 
     Options: {
         title: string
-        options: string[]
+        options: {
+            id: number
+            price: number
+            greaterThan: boolean
+        }[]
     }[]
 }
 
@@ -20,6 +27,8 @@ interface FormValues {
 }
 
 export const SideBar: React.FC<SideBarProps> = ({ Links, Options }) => {
+    const dispatch: AppDispatch = useDispatch()
+
     const router = useRouter()
     const initialValues: FormValues = { fieldOption: '' }
     const handleSubmit = (e: any) => {
@@ -40,12 +49,35 @@ export const SideBar: React.FC<SideBarProps> = ({ Links, Options }) => {
                                 <OptionsTitle key={title}>{title}</OptionsTitle>
                                 <OptionForm key={title}>
                                     {
-                                        options.map((option: string) => (
-                                            <label key={option}>
-                                                <OptionsText key={option} type='checkbox' name={option} value={option} />
-                                                {option}
-                                            </label>
-                                        ))
+                                        options.map(({ greaterThan, id, price }) => {
+                                            if (greaterThan) {
+                                                return (
+                                                    <label key={id}>
+                                                        <OptionsText key={id} type='checkbox' name={'' + id} value={'' + id} onClick={() => {
+                                                            dispatch(setPriceFilter('Keeb', 300, true))
+                                                        }} />
+                                                        ${price}+
+                                                    </label>
+                                                )
+                                            }
+                                            return (
+                                                <label key={id}>
+                                                    <OptionsText key={id} type='checkbox' name={'' + id} value={'' + id} onClick={() => {
+                                                        switch (id) {
+                                                            case 0:
+                                                                dispatch(setPriceFilter('Keeb', 50, false))
+                                                                break
+                                                            case 1:
+                                                                dispatch(setPriceFilter('Keeb', 100, false))
+                                                            case 2:
+                                                                dispatch(setPriceFilter('Keeb', 200, false))
+                                                                break
+                                                        }
+                                                    }} />
+                                                    ${price}
+                                                </label>
+                                            )
+                                        })
                                     }
                                 </OptionForm>
                             </OptionContainer>
@@ -58,57 +90,57 @@ export const SideBar: React.FC<SideBarProps> = ({ Links, Options }) => {
 }
 
 const Container = styled.div`
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`
+                                                height: 100%;
+                                                display: flex;
+                                                flex-direction: column;
+                                                align-items: center;
+                                                `
 const SideBarContainer = styled.div`
 
-`
+                                                `
 
 const LinksText = styled.p`
-    font-weight: 600;
-    font-size: 20px;
-    max-height: 0px;
-    text-decoration: none;
-    cursor: pointer;
-`
+                                                font-weight: 600;
+                                                font-size: 20px;
+                                                max-height: 0px;
+                                                text-decoration: none;
+                                                cursor: pointer;
+                                                `
 const LinksContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-`
+                                                display: flex;
+                                                flex-direction: column;
+                                                justify-content: center;
+                                                `
 
 const OptionsContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-`
+                                                display: flex;
+                                                flex-direction: column;
+                                                justify-content: center;
+                                                `
 const OptionContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-top: 15px;
-`
+                                                display: flex;
+                                                flex-direction: column;
+                                                justify-content: center;
+                                                margin-top: 15px;
+                                                `
 const OptionsTitle = styled.p`
-    font-weight: 600;
-    font-size: 20px;
-    max-height: 0px;
-    text-decoration: none;
-    cursor: default;
-`
+                                                font-weight: 600;
+                                                font-size: 20px;
+                                                max-height: 0px;
+                                                text-decoration: none;
+                                                cursor: default;
+                                                `
 const OptionsText = styled(Field)`
-    font-weight: 600;
-    font-size: 15px;
-    max-height: 0px;
-    text-decoration: none;
-    cursor: pointer;
-    opacity: 80%;
-`
+                                                font-weight: 600;
+                                                font-size: 15px;
+                                                max-height: 0px;
+                                                text-decoration: none;
+                                                cursor: pointer;
+                                                opacity: 80%;
+                                                `
 
 const OptionForm = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-top: 15px;
-`
+                                                display: flex;
+                                                flex-direction: column;
+                                                margin-top: 15px;
+                                                `

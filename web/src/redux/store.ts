@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { textDecoration } from './reducers/DynamicCss'
+import { filterData } from './reducers/filter'
 
 export const store = configureStore({
   reducer: {
     textDecoration: textDecoration,
+    filterData: filterData,
   },
 })
 

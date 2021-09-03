@@ -1,16 +1,28 @@
 import { AnyAction, Reducer } from '@reduxjs/toolkit'
-import { Keeb } from '../../generated/graphql'
+import { Product } from '../../../types'
+import { SET_FILTER_PRICE } from '../actionTypes'
 
 interface filterProps {
   price: number
-  data: Keeb[]
+  productType: Product | string
+  greaterThan: boolean
 }
 
-export const filterDataByPrice: Reducer<filterProps, AnyAction> = (
-  state,
+const initialState = {
+  price: 300,
+  productType: 'Keeb',
+  greaterThan: true,
+}
+
+export const filterData: Reducer<filterProps, AnyAction> = (
+  state = initialState,
   action
 ) => {
-  console.log('state', state)
-  console.log('action', action)
-  return state!
+  switch (action.type) {
+    case SET_FILTER_PRICE:
+      console.log(action.payload)
+      return action.payload
+  }
+
+  return state
 }
