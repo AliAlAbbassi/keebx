@@ -53,7 +53,11 @@ export const main = async () => {
   app.set('trust proxy', 1);
   app.use(
     cors({
-      origin: [process.env.cors_origin, 'http://localhost:4200'],
+      origin: [
+        process.env.cors_origin,
+        'http://localhost:4200',
+        'https://studio.apollographql.com',
+      ],
       credentials: true,
     })
   );
