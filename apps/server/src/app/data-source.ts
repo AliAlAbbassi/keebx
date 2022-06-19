@@ -7,7 +7,7 @@ import { User } from './entities/User';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  url: process.env['DATABASE_URL'],
+  url: process.env.DATABASE_URL,
   synchronize: true,
   logging: true,
   entities: [Keeb, Ask, Bid, Sale, User],

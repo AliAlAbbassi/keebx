@@ -1,4 +1,3 @@
-import 'dotenv-safe/config';
 import { ApolloServer } from 'apollo-server-express';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
@@ -14,12 +13,13 @@ import { KeebResolver } from './resolvers/keeb';
 import { saleResolver } from './resolvers/sale';
 import { UserResolver } from './resolvers/user';
 import { createUserLoader } from './utils/createUserLoader';
+import 'dotenv-safe/config';
 
 export const redis = new Redis({
-  host: process.env['redis_host'],
-  port: parseInt(process.env['redis_port']),
-  password: process.env['password'],
-  username: process.env['username'],
+  host: process.env.redis_host,
+  port: parseInt(process.env.redis_port),
+  password: process.env.redis_password,
+  username: process.env.redis_username,
 });
 
 export const main = async () => {
@@ -52,7 +52,7 @@ export const main = async () => {
   app.set('trust proxy', 1);
   app.use(
     cors({
-      origin: process.env['cors_origin'],
+      origin: process.env.cors_origin,
       credentials: true,
     })
   );
@@ -73,7 +73,7 @@ export const main = async () => {
       },
       saveUninitialized: false,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      secret: process.env['secret'],
+      secret: process.env.secret,
       resave: false,
     })
   );
@@ -104,7 +104,7 @@ export const main = async () => {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  app.listen(parseInt(process.env['port']), () => {
+  app.listen(parseInt(process.env.port), () => {
     console.log('server started on localhost:4001');
   });
 };
