@@ -1,1 +1,1 @@
-export const CLIENT = 'https://keebx.vercel.app/graphql';
+export const CLIENT = 'https://keebx-api.herokuapp.com/graphql';
