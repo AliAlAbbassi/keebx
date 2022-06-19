@@ -1,1 +1,1 @@
-export const CLIENT = 'http://localhost:4001/graphql';
+export const CLIENT = 'https://keebx.vercel.app/graphql';
