@@ -1,24 +1,24 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import React, { ReactElement } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { CLIENT } from '../env';
 import NavBar from '../components/NavBar';
+import { CLIENT } from '../env';
 
 interface LayoutProps {
-  layoutType: 'Default' | 'Keyboard' | 'NoBgColor';
+  layoutType?: 'Default' | 'Keyboard' | 'NoBgColor';
   children: ReactElement;
 }
-
-const client = new ApolloClient({
-  uri: CLIENT,
-  cache: new InMemoryCache(),
-  credentials: 'include',
-});
 
 const Layout: React.FC<LayoutProps> = ({
   children,
   layoutType = 'Default',
 }) => {
+  const client = new ApolloClient({
+    uri: CLIENT,
+    cache: new InMemoryCache(),
+    credentials: 'include',
+  });
+
   if (layoutType === 'Keyboard') {
     return (
       <ApolloProvider client={client}>
@@ -37,8 +37,8 @@ const Layout: React.FC<LayoutProps> = ({
         <LayoutContainer>
           <GlobalStyle />
           <NavBar withSpaceBar={false} />
+          <main>{children}</main>
         </LayoutContainer>
-        <main>{children}</main>
       </ApolloProvider>
     );
   }
@@ -56,7 +56,7 @@ const Layout: React.FC<LayoutProps> = ({
 
 const GlobalStyle = createGlobalStyle`
       html{
-        margin:0;
+        margin:100;
       padding: 0;
       }
 
@@ -65,6 +65,7 @@ const GlobalStyle = createGlobalStyle`
       margin: 0;
       }
       `;
+
 const LayoutContainer = styled.div`
   background: rgb(0, 139, 246);
   background: linear-gradient(

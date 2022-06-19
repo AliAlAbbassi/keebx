@@ -1,7 +1,6 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import { ReactElement, ReactNode } from 'react';
-import './styles.css';
 import { Provider } from 'react-redux';
 import { store } from '../redux/store';
 
@@ -14,7 +13,9 @@ type AppPropsWithLayout = AppProps & {
 };
 
 function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
-  return (
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  return getLayout(
     <Provider store={store}>
       <Component {...pageProps} />
     </Provider>

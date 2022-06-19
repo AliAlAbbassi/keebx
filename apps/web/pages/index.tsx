@@ -27,7 +27,7 @@ const Index: NextLayoutComponentType = () => {
   );
 };
 
-Index.getLayout = (page) => <Layout layoutType="Default">{page}</Layout>;
+Index.getLayout = (page) => <Layout>{page}</Layout>;
 
 const Container = styled.div`
   font-family: 'Segoe UI';
