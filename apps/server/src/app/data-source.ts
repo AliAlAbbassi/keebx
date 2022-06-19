@@ -1,5 +1,4 @@
 import { DataSource } from 'typeorm';
-import { environment } from '../environments/environment.prod';
 import { Ask } from './entities/Ask';
 import { Bid } from './entities/Bid';
 import { Keeb } from './entities/Keeb';
@@ -8,7 +7,7 @@ import { User } from './entities/User';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  url: environment.database_url,
+  url: process.env['DATABASE_URL'],
   synchronize: true,
   logging: true,
   entities: [Keeb, Ask, Bid, Sale, User],
