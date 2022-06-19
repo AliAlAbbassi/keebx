@@ -1,3 +1,4 @@
+import 'dotenv-safe/config';
 import { ApolloServer } from 'apollo-server-express';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
@@ -6,7 +7,6 @@ import session from 'express-session';
 import Redis from 'ioredis';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
-import { environment } from '../environments/environment.prod';
 import { COOKIE_NAME, __prod__ } from './constants';
 import { askResolver } from './resolvers/ask';
 import { bidResolver } from './resolvers/bid';
@@ -16,10 +16,10 @@ import { UserResolver } from './resolvers/user';
 import { createUserLoader } from './utils/createUserLoader';
 
 export const redis = new Redis({
-  host: environment.redis_host,
-  port: environment.redis_port,
-  password: environment.password,
-  username: environment.username,
+  host: process.env['redis_host'],
+  port: parseInt(process.env['redis_port']),
+  password: process.env['password'],
+  username: process.env['username'],
 });
 
 export const main = async () => {
@@ -52,7 +52,7 @@ export const main = async () => {
   app.set('trust proxy', 1);
   app.use(
     cors({
-      origin: environment.cors_origin,
+      origin: process.env['cors_origin'],
       credentials: true,
     })
   );
@@ -73,7 +73,7 @@ export const main = async () => {
       },
       saveUninitialized: false,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      secret: environment.secret,
+      secret: process.env['secret'],
       resave: false,
     })
   );
@@ -95,7 +95,6 @@ export const main = async () => {
       redis,
       userLoader: createUserLoader(),
     }),
-    introspection: true,
   });
 
   await apolloServer.start();
@@ -105,7 +104,7 @@ export const main = async () => {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  app.listen(parseInt(environment.port), () => {
+  app.listen(parseInt(process.env['port']), () => {
     console.log('server started on localhost:4001');
   });
 };
