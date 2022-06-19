@@ -48,11 +48,12 @@ export const main = async () => {
 
   const app = express();
 
+  console.log(process.env.cors_origin);
   const RedisStore = connectRedis(session);
   app.set('trust proxy', 1);
   app.use(
     cors({
-      origin: process.env.cors_origin,
+      origin: [process.env.cors_origin, 'http://localhost:4200'],
       credentials: true,
     })
   );
@@ -100,7 +101,7 @@ export const main = async () => {
   await apolloServer.start();
   apolloServer.applyMiddleware({
     app,
-    cors: false,
+    cors: true,
   });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
