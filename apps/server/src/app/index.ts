@@ -95,6 +95,7 @@ export const main = async () => {
       redis,
       userLoader: createUserLoader(),
     }),
+    introspection: true,
   });
 
   await apolloServer.start();
