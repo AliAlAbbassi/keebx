@@ -1,0 +1,12 @@
+query asks($keebId: Float!) {
+  asks(keebId: $keebId) {
+    askId
+    askPrice
+    userId
+    keebId
+    title
+    ticker
+    createdAt
+    updatedAt
+  }
+}

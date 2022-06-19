@@ -1,0 +1,11 @@
+mutation addAsk($options: askInput!) {
+  createAsk(options: $options) {
+    errors {
+      field
+      message
+    }
+    ask {
+      askId
+    }
+  }
+}

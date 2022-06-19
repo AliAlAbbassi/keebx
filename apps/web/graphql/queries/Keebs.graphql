@@ -1,0 +1,13 @@
+query keebs {
+  keebs {
+    id
+    title
+    ticker
+    condition
+    imageUrl
+    authenticity
+    switches
+    createdAt
+    updatedAt
+  }
+}

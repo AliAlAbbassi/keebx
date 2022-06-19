@@ -1,0 +1,10 @@
+mutation updateKeeb($updateOptions: updateKeebOptions!, $id: Float!) {
+  updateKeeb(updateOptions: $updateOptions, id: $id) {
+    keebs {
+      title
+      ticker
+      condition
+      authenticity
+    }
+  }
+}

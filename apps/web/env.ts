@@ -1,0 +1,1 @@
+export const CLIENT = 'http://localhost:4000/graphql'

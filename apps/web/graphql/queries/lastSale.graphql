@@ -1,0 +1,11 @@
+query lastSale($keebId: Float!) {
+  lastSale(keebId: $keebId) {
+    saleId
+    salePrice
+    bidId
+    askId
+    keebId
+    createdAt
+    updatedAt
+  }
+}

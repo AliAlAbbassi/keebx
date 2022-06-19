@@ -1,0 +1,13 @@
+mutation deleteKeeb($id: Float!) {
+  deleteKeeb(id: $id) {
+    errors {
+      field
+      message
+    }
+    keebs {
+      id
+      title
+      ticker
+    }
+  }
+}

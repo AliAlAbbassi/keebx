@@ -2,7 +2,7 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "npmScope": "keebx",
   "affected": {
-    "defaultBase": "main"
+    "defaultBase": "master"
   },
   "implicitDependencies": {
     "package.json": {
@@ -24,11 +24,6 @@
       "dependsOn": ["^build"]
     }
   },
-  "workspaceLayout": {
-    "appsDir": "packages",
-    "libsDir": "packages"
-  },
-  "defaultProject": "server",
   "generators": {
     "@nrwl/react": {
       "application": {
@@ -37,9 +32,10 @@
     },
     "@nrwl/next": {
       "application": {
-        "style": "scss",
+        "style": "styled-components",
         "linter": "eslint"
       }
     }
-  }
+  },
+  "defaultProject": "web"
 }

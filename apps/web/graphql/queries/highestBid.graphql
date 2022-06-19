@@ -1,0 +1,12 @@
+query highestBid($keebId: Float!) {
+  highestBid(keebId: $keebId) {
+    bidId
+    bidPrice
+    userId
+    keebId
+    title
+    ticker
+    createdAt
+    updatedAt
+  }
+}

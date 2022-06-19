@@ -1,0 +1,11 @@
+mutation addBid($options: bidInput!) {
+  createBid(options: $options) {
+    errors {
+      field
+      message
+    }
+    bid {
+      bidId
+    }
+  }
+}

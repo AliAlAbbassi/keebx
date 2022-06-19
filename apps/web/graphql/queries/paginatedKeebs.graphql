@@ -1,0 +1,13 @@
+query paginatedKeebs($limit: Float!, $offset: Float!) {
+  keebsWithPagination(limit: $limit, offset: $offset) {
+    id
+    title
+    ticker
+    imageUrl
+    condition
+    authenticity
+    switches
+    createdAt
+    updatedAt
+  }
+}
